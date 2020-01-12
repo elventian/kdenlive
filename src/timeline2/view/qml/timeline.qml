@@ -827,6 +827,8 @@ Rectangle {
                             controller.requestClearSelection();
                         }
                         proxy.position = Math.min((scrollView.contentX + mouse.x) / timeline.scaleFactor, timeline.fullDuration - 1)
+                        var clickedTrack = tracksRepeater.itemAt(Logic.getTrackIndexFromPos(mouse.y - ruler.height + scrollView.flickableItem.contentY)).trackInternalId
+                        timeline.createIntervalUnderCursor(clickedTrack)
                     }
                 } else if (mouse.button & Qt.RightButton) {
                     if (mouse.y > ruler.height) {

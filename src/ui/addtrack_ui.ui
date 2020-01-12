@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>496</width>
-    <height>168</height>
+    <width>651</width>
+    <height>171</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -43,10 +43,10 @@
      <item>
       <widget class="QRadioButton" name="video_track">
        <property name="text">
-        <string>Video &amp;track</string>
+        <string>&amp;Video track</string>
        </property>
        <property name="checked">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
       </widget>
      </item>
@@ -68,6 +68,16 @@
       <widget class="QRadioButton" name="arec_track">
        <property name="text">
         <string>Au&amp;dio record track</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="feature_track">
+       <property name="text">
+        <string>Feature track</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
