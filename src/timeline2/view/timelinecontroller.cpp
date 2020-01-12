@@ -1074,7 +1074,17 @@ void TimelineController::cutClipUnderCursor(int position, int track)
     }
     if (!foundClip) {
         pCore->displayMessage(i18n("No clip to cut"), InformationMessage, 500);
-    }
+	}
+}
+
+void TimelineController::createIntervalUnderCursor(int track)
+{
+	int position = pCore->getTimelinePosition();
+	
+	const QString binClipId;
+	int intervalId;
+	m_model->requestClipInsertion(binClipId, track, position, intervalId, true, true, false);
+	qDebug() << "createIntervalUnderCursor: " << track << position;
 }
 
 int TimelineController::requestSpacerStartOperation(int trackId, int position)

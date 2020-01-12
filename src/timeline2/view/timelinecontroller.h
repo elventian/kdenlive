@@ -313,6 +313,10 @@ public:
     /* @brief Cuts the clip on current track at timeline position
      */
     Q_INVOKABLE void cutClipUnderCursor(int position = -1, int track = -1);
+	
+	/* @brief Create feature interval under cursor
+     */
+    Q_INVOKABLE void createIntervalUnderCursor(int track);
     /* @brief Request a spacer operation
      */
     Q_INVOKABLE int requestSpacerStartOperation(int trackId, int position);
