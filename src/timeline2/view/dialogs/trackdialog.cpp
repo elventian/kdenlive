@@ -96,7 +96,12 @@ int TrackDialog::selectedTrackId() const
 
 bool TrackDialog::addAVTrack() const
 {
-    return av_track->isChecked();
+	return av_track->isChecked();
+}
+
+bool TrackDialog::addFeatureTrack() const
+{
+	return feature_track->isChecked();
 }
 
 bool TrackDialog::addRecTrack() const

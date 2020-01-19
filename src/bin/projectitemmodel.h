@@ -65,6 +65,8 @@ public:
 
     friend class ProjectClip;
 
+	/** @brief Returns a clip from the hierarchy, given its id */
+    const QString getClipIdByName(const QString &binClipName);
     /** @brief Returns a clip from the hierarchy, given its id */
     std::shared_ptr<ProjectClip> getClipByBinID(const QString &binId);
     /** @brief Returns audio levels for a clip from its id */

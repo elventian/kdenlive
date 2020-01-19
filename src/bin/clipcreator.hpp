@@ -33,6 +33,12 @@
 
 class ProjectItemModel;
 namespace ClipCreator {
+/* @brief Create and inserts an interval clip
+   @param duration : duration expressed in number of frames
+   @param name: name of the clip
+   @return the binId of the created clip
+*/
+QString createIntervalClip(const std::shared_ptr<ProjectItemModel> &model);
 /* @brief Create and inserts a color clip
    @param color : a string of the form "0xff0000ff" (solid red in RGBA)
    @param duration : duration expressed in number of frames

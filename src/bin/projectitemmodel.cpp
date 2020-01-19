@@ -40,6 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "projectfolder.h"
 #include "projectsubclip.h"
 #include "xml/xml.hpp"
+#include "bin/clipcreator.hpp"
 
 #include <KLocalizedString>
 #include <QIcon>
@@ -71,7 +72,20 @@ std::shared_ptr<ProjectItemModel> ProjectItemModel::construct(QObject *parent)
 {
     std::shared_ptr<ProjectItemModel> self(new ProjectItemModel(parent));
     self->rootItem = ProjectFolder::construct(self);
-    return self;
+	return self;
+}
+
+const QString ProjectItemModel::getClipIdByName(const QString &binClipName)
+{
+	READ_LOCK();
+    for (const auto &clip : m_allItems) {
+        auto c = std::static_pointer_cast<AbstractProjectItem>(clip.second.lock());
+        if (c->itemType() == AbstractProjectItem::ClipItem && c->name() == binClipName) 
+		{
+            return c->clipId();
+        }
+    }
+	return QString();
 }
 
 ProjectItemModel::~ProjectItemModel() = default;
@@ -974,6 +988,10 @@ void ProjectItemModel::loadBinPlaylist(Mlt::Tractor *documentTractor, Mlt::Tract
             }
         }
     }
+	else 
+	{
+		QString binClipId = ClipCreator::createIntervalClip(pCore->projectItemModel());
+	}
     m_binPlaylist->setRetainIn(modelTractor);
 }
 

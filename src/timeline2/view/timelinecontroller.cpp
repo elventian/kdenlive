@@ -556,7 +556,8 @@ void TimelineController::addTrack(int tid)
         int newTid;
         bool audioRecTrack = d->addRecTrack();
         bool addAVTrack = d->addAVTrack();
-        m_model->requestTrackInsertion(d->selectedTrackPosition(), newTid, d->trackName(), d->addAudioTrack());
+        m_model->requestTrackInsertion(d->selectedTrackPosition(), newTid, d->trackName(), 
+			d->addAudioTrack(), d->addFeatureTrack());
         if (addAVTrack) {
             int newTid2;
             int mirrorPos = 0;
@@ -1075,16 +1076,6 @@ void TimelineController::cutClipUnderCursor(int position, int track)
     if (!foundClip) {
         pCore->displayMessage(i18n("No clip to cut"), InformationMessage, 500);
 	}
-}
-
-void TimelineController::createIntervalUnderCursor(int track)
-{
-	int position = pCore->getTimelinePosition();
-	
-	const QString binClipId;
-	int intervalId;
-	m_model->requestClipInsertion(binClipId, track, position, intervalId, true, true, false);
-	qDebug() << "createIntervalUnderCursor: " << track << position;
 }
 
 int TimelineController::requestSpacerStartOperation(int trackId, int position)
@@ -2707,4 +2698,22 @@ bool TimelineController::refreshIfVisible(int cid)
         ++it;
     }
     return false;
+}
+
+
+void TimelineController::createIntervalUnderCursor(int track)
+{
+	if (m_model->getTrackById_const(track)->trackType() != PlaylistState::FeatureOnly) { return; }
+		
+	
+	QString binClipId = pCore->projectItemModel()->getClipIdByName("feature_binclip");
+	if (binClipId.isEmpty())
+	{
+		qDebug() << "Error: no feature_binclip in project!";
+		return;
+	}
+
+	int intervalId;
+	int position = pCore->getTimelinePosition();
+	m_model->requestClipInsertion(binClipId, track, position, intervalId, true, true, false);
 }

@@ -78,8 +78,8 @@ RTTR_REGISTRATION
             parameter_names("itemIds", "logUndo", "type"))
         .method("requestClipUngroup", select_overload<bool(int, bool)>(&TimelineModel::requestClipUngroup))(parameter_names("itemId", "logUndo"))
         .method("requestClipsUngroup", &TimelineModel::requestClipsUngroup)(parameter_names("itemIds", "logUndo"))
-        .method("requestTrackInsertion", select_overload<bool(int, int &, const QString &, bool)>(&TimelineModel::requestTrackInsertion))(
-            parameter_names("pos", "id", "trackName", "audioTrack"))
+        .method("requestTrackInsertion", select_overload<bool(int, int &, const QString &, bool, bool)>(&TimelineModel::requestTrackInsertion))(
+            parameter_names("pos", "id", "trackName", "audioTrack", "featureTrack"))
         .method("requestTrackDeletion", select_overload<bool(int)>(&TimelineModel::requestTrackDeletion))(parameter_names("trackId"))
         .method("requestClearSelection", select_overload<bool(bool)>(&TimelineModel::requestClearSelection))(parameter_names("onDeletion"))
         .method("requestAddToSelection", &TimelineModel::requestAddToSelection)(parameter_names("itemId", "clear"))
@@ -2232,13 +2232,14 @@ bool TimelineModel::requestClipUngroup(int itemId, Fun &undo, Fun &redo)
     return res;
 }
 
-bool TimelineModel::requestTrackInsertion(int position, int &id, const QString &trackName, bool audioTrack)
+bool TimelineModel::requestTrackInsertion(int position, int &id, const QString &trackName, 
+	bool audioTrack, bool featureTrack)
 {
     QWriteLocker locker(&m_lock);
     TRACE(position, id, trackName, audioTrack);
     Fun undo = []() { return true; };
     Fun redo = []() { return true; };
-    bool result = requestTrackInsertion(position, id, trackName, audioTrack, undo, redo);
+    bool result = requestTrackInsertion(position, id, trackName, audioTrack, featureTrack, undo, redo);
     if (result) {
         PUSH_UNDO(undo, redo, i18n("Insert Track"));
     }
@@ -2246,7 +2247,8 @@ bool TimelineModel::requestTrackInsertion(int position, int &id, const QString &
     return result;
 }
 
-bool TimelineModel::requestTrackInsertion(int position, int &id, const QString &trackName, bool audioTrack, Fun &undo, Fun &redo, bool addCompositing)
+bool TimelineModel::requestTrackInsertion(int position, int &id, const QString &trackName, bool audioTrack, 
+	bool featureTrack,	Fun &undo, Fun &redo, bool addCompositing)
 {
     // TODO: make sure we disable overlayTrack before inserting a track
     if (position == -1) {
@@ -2262,7 +2264,7 @@ bool TimelineModel::requestTrackInsertion(int position, int &id, const QString &
     int trackId = TimelineModel::getNextId();
     id = trackId;
     Fun local_undo = deregisterTrack_lambda(trackId);
-    TrackModel::construct(shared_from_this(), trackId, position, trackName, audioTrack);
+    TrackModel::construct(shared_from_this(), trackId, position, trackName, audioTrack, featureTrack);
     // Adjust compositions that were affecting track at previous pos
     Fun local_update = [previousId, position, this]() {
         if (previousId > -1) {
