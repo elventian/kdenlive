@@ -31,7 +31,8 @@
 #include <QModelIndex>
 #include <mlt++/MltTransition.h>
 
-TrackModel::TrackModel(const std::weak_ptr<TimelineModel> &parent, int id, const QString &trackName, bool audioTrack)
+TrackModel::TrackModel(const std::weak_ptr<TimelineModel> &parent, int id, const QString &trackName, 
+    bool audioTrack, bool featureTrack)
     : m_parent(parent)
     , m_id(id == -1 ? TimelineModel::getNextId() : id)
     , m_lock(QReadWriteLock::Recursive)
@@ -51,6 +52,10 @@ TrackModel::TrackModel(const std::weak_ptr<TimelineModel> &parent, int id, const
             for (auto &m_playlist : m_playlists) {
                 m_playlist.set("hide", 1);
             }
+        }
+        if (featureTrack)
+        {
+            m_track->set("kdenlive:feature_track", 1);
         }
         m_track->set("kdenlive:trackheight", KdenliveSettings::trackheight());
         m_effectStack = EffectStackModel::construct(m_mainPlaylist, {ObjectType::TimelineTrack, m_id}, ptr->m_undoStack);
@@ -91,9 +96,10 @@ TrackModel::~TrackModel()
     m_track->remove_track(0);
 }
 
-int TrackModel::construct(const std::weak_ptr<TimelineModel> &parent, int id, int pos, const QString &trackName, bool audioTrack)
+int TrackModel::construct(const std::weak_ptr<TimelineModel> &parent, int id, int pos, 
+    const QString &trackName, bool audioTrack, bool featureTrack)
 {
-    std::shared_ptr<TrackModel> track(new TrackModel(parent, id, trackName, audioTrack));
+    std::shared_ptr<TrackModel> track(new TrackModel(parent, id, trackName, audioTrack, featureTrack));
     TRACE_CONSTR(track.get(), parent, id, pos, trackName, audioTrack);
     id = track->m_id;
     if (auto ptr = parent.lock()) {
@@ -1295,7 +1301,9 @@ std::shared_ptr<Mlt::Tractor> TrackModel::getTrackService()
 
 PlaylistState::ClipState TrackModel::trackType() const
 {
-    return (m_track->get_int("kdenlive:audio_track") == 1 ? PlaylistState::AudioOnly : PlaylistState::VideoOnly);
+    return (m_track->get_int("kdenlive:audio_track") == 1 ? PlaylistState::AudioOnly : 
+            m_track->get_int("kdenlive:feature_track") == 1 ? PlaylistState::FeatureOnly :
+            PlaylistState::VideoOnly);
 }
 
 bool TrackModel::isHidden() const

@@ -72,6 +72,18 @@ QString ClipCreator::createTitleClip(const std::unordered_map<QString, QString> 
     return res ? id : QStringLiteral("-1");
 }
 
+QString ClipCreator::createIntervalClip(const std::shared_ptr<ProjectItemModel> &model)
+{
+    QDomDocument xml;
+
+    auto prod = createProducer(xml, ClipType::Color, "0xffffff00", "feature_binclip", 
+        1000, QStringLiteral("color"));
+
+    QString id;
+    bool res = model->requestAddBinClip(id, xml.documentElement(), "-1", i18n("Create interval clip"));
+    return res ? id : QStringLiteral("-1");
+}
+
 QString ClipCreator::createColorClip(const QString &color, int duration, const QString &name, const QString &parentFolder,
                                      const std::shared_ptr<ProjectItemModel> &model)
 {

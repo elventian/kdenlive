@@ -398,6 +398,8 @@ bool ProjectClip::isCompatible(PlaylistState::ClipState state) const
         return hasAudio() && (m_masterProducer->get_int("set.test_audio") == 0);
     case PlaylistState::VideoOnly:
         return hasVideo() && (m_masterProducer->get_int("set.test_image") == 0);
+    case PlaylistState::FeatureOnly:
+        return binId() == pCore->projectItemModel()->getClipIdByName("feature_binclip");
     default:
         return true;
     }

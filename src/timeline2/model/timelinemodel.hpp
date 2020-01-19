@@ -504,9 +504,11 @@ public:
        @param Requested position (order). If set to -1, the track is inserted last.
        @param id is a return parameter that holds the id of the resulting track (-1 on failure)
     */
-    bool requestTrackInsertion(int pos, int &id, const QString &trackName = QString(), bool audioTrack = false);
+    bool requestTrackInsertion(int pos, int &id, const QString &trackName = QString(), 
+        bool audioTrack = false, bool featureTrack = false);
     /* Same function, but accumulates undo and redo*/
-    bool requestTrackInsertion(int pos, int &id, const QString &trackName, bool audioTrack, Fun &undo, Fun &redo, bool addCompositing = true);
+    bool requestTrackInsertion(int pos, int &id, const QString &trackName, bool audioTrack, 
+        bool featureTrack, Fun &undo, Fun &redo, bool addCompositing = true);
 
     /* @brief Delete track with given id
        This also deletes all the clips contained in the track.

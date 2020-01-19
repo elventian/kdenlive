@@ -586,7 +586,7 @@ void TimelineController::addTrack(int tid)
         bool addAVTrack = d->addAVTrack();
         Fun undo = []() { return true; };
         Fun redo = []() { return true; };
-        bool result = m_model->requestTrackInsertion(d->selectedTrackPosition(), newTid, d->trackName(), d->addAudioTrack(), undo, redo);
+        bool result = m_model->requestTrackInsertion(d->selectedTrackPosition(), newTid, d->trackName(), d->addAudioTrack(), d->addFeatureTrack(), undo, redo);
         if (result) {
             m_model->setTrackProperty(newTid, "kdenlive:timeline_active", QStringLiteral("1"));
             if (addAVTrack) {
@@ -596,7 +596,7 @@ void TimelineController::addTrack(int tid)
                 if (mirrorId > -1) {
                     mirrorPos = m_model->getTrackMltIndex(mirrorId);
                 }
-                result = m_model->requestTrackInsertion(mirrorPos, newTid2, d->trackName(), true, undo, redo);
+                result = m_model->requestTrackInsertion(mirrorPos, newTid2, d->trackName(), true, false, undo, redo);
                 if (result) {
                     m_model->setTrackProperty(newTid2, "kdenlive:timeline_active", QStringLiteral("1"));
                 }
@@ -1246,16 +1246,6 @@ void TimelineController::cutClipUnderCursor(int position, int track)
     if (!foundClip) {
         pCore->displayMessage(i18n("No clip to cut"), InformationMessage, 500);
 	}
-}
-
-void TimelineController::createIntervalUnderCursor(int track)
-{
-	int position = pCore->getTimelinePosition();
-	
-	const QString binClipId;
-	int intervalId;
-	m_model->requestClipInsertion(binClipId, track, position, intervalId, true, true, false);
-	qDebug() << "createIntervalUnderCursor: " << track << position;
 }
 
 void TimelineController::cutAllClipsUnderCursor(int position)
@@ -3277,4 +3267,21 @@ void TimelineController::expandActiveClip()
             }
         }
     }
+}
+
+
+void TimelineController::createIntervalUnderCursor(int track)
+{
+    if (m_model->getTrackById_const(track)->trackType() != PlaylistState::FeatureOnly) { return; }
+
+    QString binClipId = pCore->projectItemModel()->getClipIdByName("feature_binclip");
+    if (binClipId.isEmpty())
+    {
+        qDebug() << "Error: no feature_binclip in project!";
+        return;
+    }
+
+    int intervalId;
+    int position = pCore->getTimelinePosition();
+    m_model->requestClipInsertion(binClipId, track, position, intervalId, true, true, false);
 }

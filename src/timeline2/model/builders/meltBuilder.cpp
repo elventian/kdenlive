@@ -87,10 +87,12 @@ bool constructTimelineFromMelt(const std::shared_ptr<TimelineItemModel> &timelin
             // that is a double track
             int tid;
             bool audioTrack = track->get_int("kdenlive:audio_track") == 1;
+            bool featureTrack = track->get_int("kdenlive:feature_track") == 1;
             if (!audioTrack) {
                 videoTracksIndexes << i;
             }
-            ok = timeline->requestTrackInsertion(-1, tid, QString(), audioTrack, undo, redo, false);
+            ok = timeline->requestTrackInsertion(-1, tid, QString(), audioTrack, featureTrack, 
+                undo, redo, false);
             if (track->get_int("kdenlive:locked_track") > 0) {
                 lockedTracksIndexes << tid;
             }
@@ -111,7 +113,9 @@ bool constructTimelineFromMelt(const std::shared_ptr<TimelineItemModel> &timelin
             if (!audioTrack) {
                 videoTracksIndexes << i;
             }
-            ok = timeline->requestTrackInsertion(-1, tid, trackName, audioTrack, undo, redo, false);
+            bool featureTrack = track->get_int("kdenlive:feature_track") == 1;
+            ok = timeline->requestTrackInsertion(-1, tid, trackName, audioTrack, featureTrack, 
+                undo, redo, false);
             int muteState = track->get_int("hide");
             if (muteState > 0 && (!audioTrack || (audioTrack && muteState != 1))) {
                 timeline->setTrackProperty(tid, QStringLiteral("hide"), QString::number(muteState));
