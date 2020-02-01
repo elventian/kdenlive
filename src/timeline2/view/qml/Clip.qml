@@ -67,6 +67,7 @@ Rectangle {
     property bool hasAudio
     property bool canBeAudio
     property bool canBeVideo
+    property bool isFeature
     property double speed: 1.0
     property color borderColor: 'black'
     property bool forceReloadThumb
@@ -321,6 +322,31 @@ Rectangle {
             //clip: true
             property bool showDetails: (!clipRoot.selected || !effectRow.visible) && container.height > 2.2 * labelRect.height
 
+            Rectangle {
+                // priority info
+                id: prioRect
+                color: 'darkgreen'
+                visible: clipRoot.width > width / 2
+                width: prioLabel.width + 2
+                height: prioLabel.height
+                anchors {
+                    top: container.top
+                    horizontalCenter: container.horizontalCenter
+                }
+                TextInput {
+                    id: prioLabel
+                    text: "42"
+                    font.pointSize: root.fontUnit
+                    anchors {
+                        top: prioRect.top
+                        left: prioRect.left
+                        topMargin: 1
+                        leftMargin: 1
+                    }
+                    color: 'white'
+                    validator: IntValidator{bottom: 1; top: 99;}
+                }
+            }
             Repeater {
                 // Clip markers
                 model: markers

@@ -28,6 +28,8 @@
 #include "klocalizedstring.h"
 #include <KDualAction>
 
+#include "timeline2/view/timelinewidget.h"
+#include "timeline2/view/timelinecontroller.h"
 #include "kdenlive_debug.h"
 #include <QObject>
 
@@ -219,10 +221,25 @@ void MonitorManager::slotPause()
 
 void MonitorManager::slotPlayZone()
 {
-    if (m_activeMonitor == m_clipMonitor) {
+    if (m_activeMonitor == m_clipMonitor) 
+    {
         m_clipMonitor->slotPlayZone();
-    } else if (m_activeMonitor == m_projectMonitor) {
-        m_projectMonitor->slotPlayZone();
+    } 
+    else if (m_activeMonitor == m_projectMonitor) 
+    {
+        TimelineController *controller = pCore->window()->getMainTimeline()->controller();
+        const QList<int> &selection = controller->selection();
+        if (selection.isEmpty()) 
+        {
+            m_projectMonitor->slotPlayZone();
+        }
+        else 
+        {
+            int clipId = selection.front();
+            int clipPos = controller->getModel()->getClipPosition(clipId);
+            int clipLen = controller->getModel()->getClipPlaytime(clipId);
+            m_projectMonitor->slotPlayZone(clipPos, clipPos + clipLen, false);
+        }
     }
 }
 

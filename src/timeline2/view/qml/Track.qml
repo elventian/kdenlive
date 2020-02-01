@@ -232,6 +232,7 @@ Item{
                         item.hasAudio = model.hasAudio
                         item.canBeAudio = model.canBeAudio
                         item.canBeVideo = model.canBeVideo
+                        item.isFeature = model.isFeature
                         item.itemType = model.clipType
                         item.audioChannels = model.audioChannels
                         // Speed change triggers a new clip insert so no binding necessary

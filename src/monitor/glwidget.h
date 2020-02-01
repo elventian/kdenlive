@@ -123,6 +123,7 @@ public:
     void setRulerInfo(int duration, const std::shared_ptr<MarkerListModel> &model = nullptr);
     MonitorProxy *getControllerProxy();
     bool playZone(bool loop = false);
+    bool playZone(int in, int out, bool loop = false);
     bool loopClip();
     void startConsumer();
     void stop();

@@ -52,6 +52,7 @@ ClipModel::ClipModel(const std::shared_ptr<TimelineModel> &parent, std::shared_p
     m_canBeVideo = binClip->hasVideo();
     m_canBeAudio = binClip->hasAudio();
     m_clipType = binClip->clipType();
+    featureClip = binClip->isFeature();
     if (binClip) {
         m_endlessResize = !binClip->hasLimitedDuration();
     } else {

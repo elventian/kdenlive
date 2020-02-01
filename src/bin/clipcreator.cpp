@@ -77,7 +77,7 @@ QString ClipCreator::createIntervalClip(const std::shared_ptr<ProjectItemModel> 
     QDomDocument xml;
 
     auto prod = createProducer(xml, ClipType::Color, "0xffffff00", "feature_binclip", 
-        1000, QStringLiteral("color"));
+        25, QStringLiteral("color"));
 
     QString id;
     bool res = model->requestAddBinClip(id, xml.documentElement(), "-1", i18n("Create interval clip"));

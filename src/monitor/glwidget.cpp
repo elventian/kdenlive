@@ -1658,10 +1658,15 @@ bool GLWidget::playZone(bool loop)
         pCore->displayMessage(i18n("Select a zone to play"), InformationMessage, 500);
         return false;
     }
-    m_producer->seek(m_proxy->zoneIn());
+    return playZone(m_proxy->zoneIn(), m_proxy->zoneOut(), loop);
+}
+
+bool GLWidget::playZone(int in, int out, bool loop)
+{
+    m_producer->seek(in);
     m_producer->set_speed(0);
     m_consumer->purge();
-    m_producer->set("out", m_proxy->zoneOut());
+    m_producer->set("out", out);
     m_producer->set_speed(1.0);
     if (m_consumer->is_stopped()) {
         m_consumer->start();

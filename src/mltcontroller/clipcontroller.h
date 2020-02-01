@@ -180,6 +180,8 @@ public:
     bool hasAudio() const;
     /** @brief Returns true if the clip contains at least one video stream */
     bool hasVideo() const;
+    /** @brief Returns true if the clip is feature clip */
+    bool isFeature() const { return clipName() == "feature_binclip";}
     /** @brief Returns the default state a clip should be in. If the clips contains both video and audio, this defaults to video */
     PlaylistState::ClipState defaultState() const;
     /** @brief Returns info about clip audio */

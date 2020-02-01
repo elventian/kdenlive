@@ -134,6 +134,7 @@ public:
         HasAudio,       /// clip only
         CanBeAudioRole, /// clip only
         CanBeVideoRole, /// clip only
+        IsFeatureRole,  /// clip only
         IsDisabledRole, /// track only
         IsAudioRole,
         SortRole,

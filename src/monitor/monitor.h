@@ -287,6 +287,7 @@ public slots:
     void slotPlay() override;
     void pause();
     void slotPlayZone();
+    void slotPlayZone(int in, int out, bool loop);
     void slotLoopZone();
     /** @brief Loops the selected item (clip or transition). */
     void slotLoopClip();
