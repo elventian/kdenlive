@@ -2705,7 +2705,6 @@ void TimelineController::createIntervalUnderCursor(int track)
 {
 	if (m_model->getTrackById_const(track)->trackType() != PlaylistState::FeatureOnly) { return; }
 		
-	
 	QString binClipId = pCore->projectItemModel()->getClipIdByName("feature_binclip");
 	if (binClipId.isEmpty())
 	{
@@ -2714,6 +2713,11 @@ void TimelineController::createIntervalUnderCursor(int track)
 	}
 
 	int intervalId;
-	int position = pCore->getTimelinePosition();
-	m_model->requestClipInsertion(binClipId, track, position, intervalId, true, true, false);
+	int position = m_model->suggestSnapPoint(pCore->getTimelinePosition(), 100);
+	int nextSnapPoint = m_model->getNextSnapPos(position);
+	if (m_model->requestClipInsertion(binClipId, track, position, intervalId, true, true, false))
+	{
+		int size = nextSnapPoint - position;
+		if (size > 0) { m_model->requestItemResize(intervalId, size, true); }
+	}
 }

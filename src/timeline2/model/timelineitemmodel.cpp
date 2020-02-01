@@ -223,6 +223,7 @@ QHash<int, QByteArray> TimelineItemModel::roleNames() const
     roles[HasAudio] = "hasAudio";
     roles[CanBeAudioRole] = "canBeAudio";
     roles[CanBeVideoRole] = "canBeVideo";
+	roles[IsFeatureRole] = "isFeature";
     roles[ReloadThumbRole] = "reloadThumb";
     roles[PositionOffsetRole] = "positionOffset";
     roles[ThumbsFormatRole] = "thumbsFormat";
@@ -291,7 +292,6 @@ QVariant TimelineItemModel::data(const QModelIndex &index, int role) const
             return clip->getCurrentTrackId();
         case ServiceRole:
             return clip->getProperty("mlt_service");
-            break;
         case AudioChannelsRole:
             return clip->audioChannels();
         case HasAudio:
@@ -302,6 +302,8 @@ QVariant TimelineItemModel::data(const QModelIndex &index, int role) const
             return clip->canBeAudio();
         case CanBeVideoRole:
             return clip->canBeVideo();
+		case IsFeatureRole:
+			return clip->isFeature();
         case MarkersRole: {
             return QVariant::fromValue<MarkerListModel *>(clip->getMarkerModel().get());
         }

@@ -66,6 +66,7 @@ Rectangle {
     property bool hasAudio
     property bool canBeAudio
     property bool canBeVideo
+    property bool isFeature
     property double speed: 1.0
     property color borderColor: 'black'
     property bool forceReloadThumb
@@ -320,7 +321,7 @@ Rectangle {
                 color: clipRoot.selected ? 'darkred' : '#66000000'
                 width: label.width + 2
                 height: label.height
-                visible: clipRoot.width > width / 2
+                visible: !isFeature && clipRoot.width > width / 2
                 Text {
                     id: label
                     text: clipName + (clipRoot.speed != 1.0 ? ' [' + Math.round(clipRoot.speed*100) + '%]': '')
@@ -334,6 +335,31 @@ Rectangle {
                     color: 'white'
                     style: Text.Outline
                     styleColor: 'black'
+                }
+            }
+            Rectangle {
+                // priority info
+                id: prioRect
+                color: 'darkgreen'
+                visible: clipRoot.width > width / 2
+                width: prioLabel.width + 2
+                height: prioLabel.height
+                anchors {
+                    top: container.top
+                    horizontalCenter: container.horizontalCenter
+                }
+                TextInput {
+                    id: prioLabel
+                    text: "42"
+                    font.pointSize: root.fontUnit
+                    anchors {
+                        top: prioRect.top
+                        left: prioRect.left
+                        topMargin: 1
+                        leftMargin: 1
+                    }
+                    color: 'white'
+                    validator: IntValidator{bottom: 1; top: 99;}
                 }
             }
             Rectangle {
@@ -390,7 +416,7 @@ Rectangle {
                 height: effectLabel.height
                 x: labelRect.x
                 anchors.top: labelRect.bottom
-                visible: labelRect.visible && clipRoot.effectNames != ''
+                visible: !isFeature && labelRect.visible && clipRoot.effectNames != ''
                 Text {
                     id: effectLabel
                     text: clipRoot.effectNames
@@ -513,7 +539,7 @@ Rectangle {
             border.color: 'green'
             opacity: 0
             enabled: !clipRoot.isAudio && dragProxy.draggedItem === clipRoot.clipId
-            visible: clipRoot.width > 4 * width
+            visible: !isFeature && clipRoot.width > 4 * width
             MouseArea {
                 id: compInArea
                 anchors.fill: parent
@@ -561,7 +587,7 @@ Rectangle {
             border.color: 'green'
             opacity: 0
             enabled: !clipRoot.isAudio  && dragProxy.draggedItem == clipRoot.clipId
-            visible: clipRoot.width > 4 * width
+            visible: !isFeature && clipRoot.width > 4 * width
             MouseArea {
                 id: compOutArea
                 anchors.fill: parent

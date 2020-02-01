@@ -237,6 +237,7 @@ Column{
                         item.hasAudio = model.hasAudio
                         item.canBeAudio = model.canBeAudio
                         item.canBeVideo = model.canBeVideo
+                        item.isFeature = model.isFeature
                         item.itemType = model.clipType
                         item.audioChannels = model.audioChannels
                         //item.binId= model.binId

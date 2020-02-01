@@ -80,6 +80,8 @@ public:
     bool canBeVideo() const;
     /* @brief Returns true if the clip can be converted to an audio clip */
     bool canBeAudio() const;
+	/* @brief Returns true if the clip is feature */
+	bool isFeature() const { return  featureClip; }
 
     /* @brief Returns a comma separated list of effect names */
     const QString effectNames() const;
@@ -223,6 +225,7 @@ protected:
     double m_speed = -1; // Speed of the clip
 
     bool m_canBeVideo, m_canBeAudio;
+	bool featureClip;
     // Fake track id, used when dragging in insert/overwrite mode
     int m_fakeTrack;
     int m_fakePosition;
