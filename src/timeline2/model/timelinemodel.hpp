@@ -359,6 +359,9 @@ public:
 	
 	/* @brief Set priority for feature clip */
 	Q_INVOKABLE void requestSetIntensity(int clipId, int intensity);
+	
+	/* @brief Checks if track is a feature track */
+	Q_INVOKABLE bool isFeatureTrack(int trackId);
 
     /* Same function, but accumulates undo and redo, and doesn't check
        for group*/

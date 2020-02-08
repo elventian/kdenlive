@@ -240,6 +240,9 @@ public:
     /* @brief Remove a timeline track
      */
     Q_INVOKABLE void deleteTrack(int tid);
+	
+	/* @brief Show settings of track*/
+    Q_INVOKABLE void showTrackSettings(int tid);
     /* @brief Group selected items in timeline
      */
     Q_INVOKABLE void groupSelection();

@@ -350,6 +350,17 @@ Rectangle {
                     }
                  }
             }
+            ToolButton {
+                id: featureSettingsButton
+                implicitHeight: trackHeadRoot.iconSize
+                implicitWidth: trackHeadRoot.iconSize
+                iconName: 'configure'
+                onClicked: timeline.showTrackSettings(trackId)
+                tooltip: i18n("Feature settings")
+                visible: controller.isFeatureTrack(trackId)
+            }
+            
+            //QIcon::fromTheme(QStringLiteral("configure"))
             Layout.rightMargin: 4
         }
         RowLayout {
