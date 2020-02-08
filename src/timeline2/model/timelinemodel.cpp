@@ -3012,6 +3012,14 @@ void TimelineModel::requestSetIntensity(int clipId, int intensity)
     PUSH_UNDO(undo, redo, i18n("Change intensity"));
 }
 
+bool TimelineModel::isFeatureTrack(int trackId)
+{
+    READ_LOCK();
+    Q_ASSERT(isTrack(trackId));
+    auto it = m_iteratorTable.at(trackId);
+    return (*it)->trackType() == PlaylistState::FeatureOnly;
+}
+
 bool TimelineModel::isAudioTrack(int trackId) const
 {
     READ_LOCK();

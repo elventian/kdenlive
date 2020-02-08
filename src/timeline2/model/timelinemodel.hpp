@@ -358,6 +358,9 @@ public:
        track */
     Q_INVOKABLE bool requestCompositionMove(int compoId, int trackId, int position, bool updateView = true, bool logUndo = true);
 
+    /* @brief Checks if track is a feature track */
+    Q_INVOKABLE bool isFeatureTrack(int trackId);
+
     /* @brief Set priority for feature clip */
     Q_INVOKABLE void requestSetIntensity(int clipId, int intensity);
 

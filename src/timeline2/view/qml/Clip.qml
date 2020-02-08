@@ -344,6 +344,7 @@ Rectangle {
                     visible: true
                     width: parent.width
                     text: intensity
+                    horizontalAlignment: TextInput.AlignHCenter
                     font.pointSize: root.fontUnit
                     anchors.horizontalCenter: intensityRect.horizontalCenter
                     validator: IntValidator{bottom: 1; top: 99;}

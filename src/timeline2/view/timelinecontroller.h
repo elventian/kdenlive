@@ -253,6 +253,8 @@ public:
     /* @brief Show / hide audio rec controls in active track
      */
     void switchTrackRecord(int tid = -1);
+    /* @brief Show settings of track*/
+    Q_INVOKABLE void showTrackSettings(int tid);
     /* @brief Group selected items in timeline
      */
     Q_INVOKABLE void groupSelection();

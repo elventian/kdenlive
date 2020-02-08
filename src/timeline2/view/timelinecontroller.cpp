@@ -3290,3 +3290,51 @@ void TimelineController::createIntervalUnderCursor(int track)
         if (size > 0) { m_model->requestItemResize(intervalId, size, true); }
     }
 }
+
+
+void TimelineController::addTrack(int tid)
+{
+    if (tid == -1) {
+        tid = m_activeTrack;
+    }
+    QPointer<TrackDialog> d = new TrackDialog(m_model, tid, qApp->activeWindow());
+    if (d->exec() == QDialog::Accepted) {
+        int newTid;
+        bool audioRecTrack = d->addRecTrack();
+        bool addAVTrack = d->addAVTrack();
+        m_model->requestTrackInsertion(d->selectedTrackPosition(), newTid, d->trackName(), 
+			d->addAudioTrack(), d->addFeatureTrack());
+        if (addAVTrack) {
+            int newTid2;
+            int mirrorPos = 0;
+            int mirrorId = m_model->getMirrorAudioTrackId(newTid);
+            if (mirrorId > -1) {
+                mirrorPos = m_model->getTrackMltIndex(mirrorId);
+            }
+            m_model->requestTrackInsertion(mirrorPos, newTid2, d->trackName(), true);
+        }
+        if (audioRecTrack) {
+            m_model->setTrackProperty(newTid, "kdenlive:audio_rec", QStringLiteral("1"));
+        }
+    }
+}
+
+void TimelineController::deleteTrack(int tid)
+{
+    if (tid == -1) {
+        tid = m_activeTrack;
+    }
+    QPointer<TrackDialog> d = new TrackDialog(m_model, tid, qApp->activeWindow(), true);
+    if (d->exec() == QDialog::Accepted) {
+        int selectedTrackIx = d->selectedTrackId();
+        m_model->requestTrackDeletion(selectedTrackIx);
+        if (m_activeTrack == -1) {
+            setActiveTrack(m_model->getTrackIndexFromPosition(m_model->getTracksCount() - 1));
+        }
+	}
+}
+
+void TimelineController::showTrackSettings(int tid)
+{
+	qDebug() << "showTrackSettings" << tid;
+}
