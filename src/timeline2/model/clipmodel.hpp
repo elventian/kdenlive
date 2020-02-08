@@ -148,8 +148,11 @@ public:
     friend class TimelineController;
     friend struct TimelineFunctions;
 
+	int getIntensity() const;
+	void setIntensity(int value);
+	
 protected:
-    Mlt::Producer *service() const override;
+	Mlt::Producer *service() const override;
 
     /* @brief Performs a resize of the given clip.
        Returns true if the operation succeeded, and otherwise nothing is modified
@@ -236,6 +239,8 @@ protected:
 
     // Remember last set track, so that we don't unnecessarily refresh the producer when deleting and re-adding a clip on same track
     int m_lastTrackId = -1;
+	
+	int intensity; //For feature clips only
 };
 
 #endif

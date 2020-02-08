@@ -217,6 +217,12 @@ Column{
                     value: model.binId
                     when: loader.status == Loader.Ready && isClip(model.clipType)
                 }
+                Binding {
+                    target: loader.item
+                    property: "intensity"
+                    value: model.getIntensity
+                    when: loader.status == Loader.Ready && isClip(model.clipType)
+                }
                 sourceComponent: {
                     if (isClip(model.clipType)) {
                         return clipDelegate
@@ -238,6 +244,7 @@ Column{
                         item.canBeAudio = model.canBeAudio
                         item.canBeVideo = model.canBeVideo
                         item.isFeature = model.isFeature
+                        item.intensity = model.getIntensity
                         item.itemType = model.clipType
                         item.audioChannels = model.audioChannels
                         //item.binId= model.binId

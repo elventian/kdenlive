@@ -130,6 +130,7 @@ TimelineModel::TimelineModel(Mlt::Profile *profile, std::weak_ptr<DocUndoStack> 
     m_blackClip->set("set.test_audio", 0);
     m_blackClip->set_in_and_out(0, TimelineModel::seekDuration);
     m_tractor->insert_track(*m_blackClip, 0);
+	lastClipIntensity = 1;
 
     TRACE_CONSTR(this);
 }
@@ -949,6 +950,7 @@ bool TimelineModel::requestClipCreation(const QString &binClipId, int &id, Playl
     Fun local_undo = deregisterClip_lambda(clipId);
     ClipModel::construct(shared_from_this(), bid, clipId, state, speed);
     auto clip = m_allClips[clipId];
+	clip->setIntensity(lastClipIntensity);
     Fun local_redo = [clip, this, state]() {
         // We capture a shared_ptr to the clip, which means that as long as this undo object lives, the clip object is not deleted. To insert it back it is
         // sufficient to register it.
@@ -2833,7 +2835,33 @@ bool TimelineModel::requestCompositionMove(int compoId, int trackId, int positio
         PUSH_UNDO(undo, redo, i18n("Move composition"));
         checkRefresh(min, max);
     }
-    return res;
+	return res;
+}
+
+void TimelineModel::requestSetIntensity(int clipId, int intensity)
+{
+	Q_ASSERT(isClip(clipId));
+	
+	int prevIntensity = m_allClips[clipId]->getIntensity();
+	m_allClips[clipId]->setIntensity(intensity);
+	lastClipIntensity = intensity;
+	
+	//std::function<bool(void)> undo = []() { return true; };
+    //std::function<bool(void)> redo = []() { return true; };
+	
+	std::function<bool(void)> redo = [intensity, clipId, this]() 
+	{
+		m_allClips[clipId]->setIntensity(intensity);
+		return true;
+	};
+	
+	std::function<bool(void)> undo = [prevIntensity, clipId, this]() 
+	{
+		m_allClips[clipId]->setIntensity(prevIntensity);
+		return true;
+    };
+	
+	PUSH_UNDO(undo, redo, i18n("Change intensity"));
 }
 
 bool TimelineModel::isAudioTrack(int trackId) const

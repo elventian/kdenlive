@@ -40,7 +40,7 @@ EffectStackModel::EffectStackModel(std::weak_ptr<Mlt::Service> service, ObjectId
     , m_lock(QReadWriteLock::Recursive)
     , m_loadingExisting(false)
 {
-    m_masterService = std::move(service);
+	m_masterService = std::move(service);	
 }
 
 std::shared_ptr<EffectStackModel> EffectStackModel::construct(std::weak_ptr<Mlt::Service> service, ObjectId ownerId, std::weak_ptr<DocUndoStack> undo_stack)

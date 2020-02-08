@@ -53,6 +53,11 @@ ClipModel::ClipModel(const std::shared_ptr<TimelineModel> &parent, std::shared_p
     m_canBeAudio = binClip->hasAudio();
     m_clipType = binClip->clipType();
 	featureClip = binClip->isFeature();
+	if (featureClip) 
+	{
+		intensity = m_producer->get_int("kdenlive:intensity");
+		qDebug() << intensity;
+	}
     if (binClip) {
         m_endlessResize = !binClip->hasLimitedDuration();
     } else {
@@ -111,6 +116,8 @@ int ClipModel::construct(const std::shared_ptr<TimelineModel> &parent, const QSt
         speed = producer->parent().get_double("warp_speed");
     }
     auto result = binClip->giveMasterAndGetTimelineProducer(id, producer, state);
+	int intensity = producer->get_int("kdenlive:intensity");
+	result.first->set("kdenlive:intensity", intensity);
     std::shared_ptr<ClipModel> clip(new ClipModel(parent, result.first, binClipId, id, state, speed));
     clip->setClipState_lambda(state)();
     parent->registerClip(clip);
@@ -307,10 +314,27 @@ std::shared_ptr<Mlt::Producer> ClipModel::getProducer()
     return m_producer;
 }
 
+int ClipModel::getIntensity() const
+{
+	return intensity;
+}
+
+void ClipModel::setIntensity(int value)
+{
+	intensity = value;
+	m_producer->set("kdenlive:intensity", value);
+	if (auto ptr = m_parent.lock()) 
+	{
+		QModelIndex ix = ptr->makeClipIndexFromID(m_id);
+		QVector<int> roles{TimelineModel::GetIntensityRole};
+		ptr->notifyChange(ix, ix, roles);
+	}
+}
+
 int ClipModel::getPlaytime() const
 {
-    READ_LOCK();
-    return m_producer->get_playtime();
+	READ_LOCK();
+	return m_producer->get_playtime();
 }
 
 void ClipModel::setTimelineEffectsEnabled(bool enabled)
