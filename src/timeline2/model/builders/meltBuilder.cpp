@@ -333,7 +333,10 @@ bool constructTrackFromMelt(const std::shared_ptr<TimelineItemModel> &timeline, 
             if (pCore->bin()->getBinClip(binId)) {
                 PlaylistState::ClipState st = inferState(clip, audioTrack);
                 cid = ClipModel::construct(timeline, binId, clip, st);
+                int clipLen = track.clip_length(i);
                 ok = timeline->requestClipMove(cid, tid, position, true, true, false, true, undo, redo);
+                if (!ok ) { qDebug() << "// Cannot move clip: " << clip->get("id"); }
+                ok = timeline->requestItemResize(cid, clipLen, true);
             } else {
                 qDebug() << "// Cannot find bin clip: " << binId << " - " << clip->get("id");
             }

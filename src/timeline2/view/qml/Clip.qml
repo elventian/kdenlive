@@ -21,6 +21,10 @@ import QtQuick.Controls 2.4
 import Kdenlive.Controls 1.0
 import QtQml.Models 2.11
 import QtQuick.Window 2.2
+import QtQuick.Layouts 1.11
+import QtQuick.Controls 1.4
+import QtQuick.Controls 2.4 as NEWQML
+import QtQuick.Controls.Styles 1.4
 import 'Timeline.js' as Logic
 import com.enums 1.0
 
@@ -68,6 +72,7 @@ Rectangle {
     property bool canBeAudio
     property bool canBeVideo
     property bool isFeature
+    property int intensity
     property double speed: 1.0
     property color borderColor: 'black'
     property bool forceReloadThumb
@@ -323,28 +328,81 @@ Rectangle {
             property bool showDetails: (!clipRoot.selected || !effectRow.visible) && container.height > 2.2 * labelRect.height
 
             Rectangle {
-                // priority info
-                id: prioRect
-                color: 'darkgreen'
-                visible: clipRoot.width > width / 2
-                width: prioLabel.width + 2
-                height: prioLabel.height
+                id: intensityRect
+                color: 'transparent'
+                radius: 2
+                border.color: clipIntensityMouseArea.containsMouse ? activePalette.highlight : 'transparent'
+                height: clipIntensityEdit.height
+                width: container.width
+                visible: isFeature
                 anchors {
                     top: container.top
                     horizontalCenter: container.horizontalCenter
                 }
-                TextInput {
-                    id: prioLabel
-                    text: "42"
-                    font.pointSize: root.fontUnit
-                    anchors {
-                        top: prioRect.top
-                        left: prioRect.left
-                        topMargin: 1
-                        leftMargin: 1
+                MouseArea {
+                    id: clipIntensityMouseArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    propagateComposedEvents: true
+                    onDoubleClicked: {
+                        clipIntensityEdit.visible = true
+                        clipIntensityEdit.focus = true
+                        clipIntensityEdit.selectAll()
                     }
-                    color: 'white'
+                    onEntered: {
+                        if (clipIntensityEdit.visible == false && intensity === '') {
+                            placeHolder.visible = true
+                        }
+                    }
+                    onExited: {
+                        if (placeHolder.visible == true) {
+                            placeHolder.visible = false
+                        }
+                    }
+                }
+                Label {
+                    text: intensity
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.horizontalCenter: intensityRect.horizontalCenter
+                    elide: Qt.ElideRight
+                    font.pointSize: root.fontUnit
+                }
+                Label {
+                    id: placeHolder
+                    visible: false
+                    enabled: false
+                    text: i18n("Set intensity")
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: parent.left
+                    anchors.leftMargin: 4
+                    elide: Qt.ElideRight
+                    font.pointSize: root.fontUnit
+                }
+                TextField {
+                    id: clipIntensityEdit
+                    visible: false
+                    width: parent.width
+                    text: intensity
+                    font.pointSize: root.fontUnit
+                    anchors.horizontalCenter: intensityRect.horizontalCenter
                     validator: IntValidator{bottom: 1; top: 99;}
+                    style: TextFieldStyle {
+                        padding.top:0
+                        padding.bottom: 0
+                        background: Rectangle {
+                            radius: 2
+                            color: activePalette.window
+                            anchors.fill: parent
+                        }
+                    }
+                    onEditingFinished: {
+                        if (intensity !== parseInt(text))
+                        {
+                            controller.requestSetIntensity(clipId, parseInt(text));
+                            intensity = parseInt(text)
+                            visible = false
+                        }
+                    }
                 }
             }
             Repeater {

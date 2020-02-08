@@ -135,6 +135,7 @@ public:
         CanBeAudioRole, /// clip only
         CanBeVideoRole, /// clip only
         IsFeatureRole,  /// clip only
+        GetIntensityRole,  /// clip only
         IsDisabledRole, /// track only
         IsAudioRole,
         SortRole,
@@ -356,6 +357,9 @@ public:
        transid is the ID of the composition @param trackId is the ID of the
        track */
     Q_INVOKABLE bool requestCompositionMove(int compoId, int trackId, int position, bool updateView = true, bool logUndo = true);
+
+    /* @brief Set priority for feature clip */
+    Q_INVOKABLE void requestSetIntensity(int clipId, int intensity);
 
     /* Same function, but accumulates undo and redo, and doesn't check
        for group*/
@@ -828,6 +832,7 @@ protected:
     // Timeline editing mode
     TimelineMode::EditMode m_editMode;
     bool m_closing;
+    int lastClipIntensity;
 
     // what follows are some virtual function that corresponds to the QML. They are implemented in TimelineItemModel
 protected:

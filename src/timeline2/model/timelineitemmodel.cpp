@@ -225,6 +225,7 @@ QHash<int, QByteArray> TimelineItemModel::roleNames() const
     roles[CanBeAudioRole] = "canBeAudio";
     roles[CanBeVideoRole] = "canBeVideo";
     roles[IsFeatureRole] = "isFeature";
+    roles[GetIntensityRole] = "getIntensity";
     roles[ReloadThumbRole] = "reloadThumb";
     roles[PositionOffsetRole] = "positionOffset";
     roles[ThumbsFormatRole] = "thumbsFormat";
@@ -297,6 +298,8 @@ QVariant TimelineItemModel::data(const QModelIndex &index, int role) const
             return clip->canBeVideo();
         case IsFeatureRole:
             return clip->isFeature();
+        case GetIntensityRole:
+            return clip->getIntensity();
         case MarkersRole: {
             return QVariant::fromValue<MarkerListModel *>(clip->getMarkerModel().get());
         }

@@ -212,6 +212,12 @@ Item{
                     value: model.binId
                     when: loader.status == Loader.Ready && isClip(model.clipType)
                 }
+                Binding {
+                    target: loader.item
+                    property: "intensity"
+                    value: model.getIntensity
+                    when: loader.status == Loader.Ready && isClip(model.clipType)
+                }
                 sourceComponent: {
                     if (isClip(model.clipType)) {
                         return clipDelegate
@@ -233,6 +239,7 @@ Item{
                         item.canBeAudio = model.canBeAudio
                         item.canBeVideo = model.canBeVideo
                         item.isFeature = model.isFeature
+                        item.intensity = model.getIntensity
                         item.itemType = model.clipType
                         item.audioChannels = model.audioChannels
                         // Speed change triggers a new clip insert so no binding necessary
