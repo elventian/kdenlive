@@ -331,56 +331,17 @@ Rectangle {
                 id: intensityRect
                 color: 'transparent'
                 radius: 2
-                border.color: clipIntensityMouseArea.containsMouse ? activePalette.highlight : 'transparent'
+                border.color: clipIntensityEdit.hovered ? activePalette.highlight : 'transparent'
                 height: clipIntensityEdit.height
-                width: container.width
+                width: parent.width
                 visible: isFeature
                 anchors {
                     top: container.top
                     horizontalCenter: container.horizontalCenter
                 }
-                MouseArea {
-                    id: clipIntensityMouseArea
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    propagateComposedEvents: true
-                    onDoubleClicked: {
-                        clipIntensityEdit.visible = true
-                        clipIntensityEdit.focus = true
-                        clipIntensityEdit.selectAll()
-                    }
-                    onEntered: {
-                        if (clipIntensityEdit.visible == false && intensity === '') {
-                            placeHolder.visible = true
-                        }
-                    }
-                    onExited: {
-                        if (placeHolder.visible == true) {
-                            placeHolder.visible = false
-                        }
-                    }
-                }
-                Label {
-                    text: intensity
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.horizontalCenter: intensityRect.horizontalCenter
-                    elide: Qt.ElideRight
-                    font.pointSize: root.fontUnit
-                }
-                Label {
-                    id: placeHolder
-                    visible: false
-                    enabled: false
-                    text: i18n("Set intensity")
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.left: parent.left
-                    anchors.leftMargin: 4
-                    elide: Qt.ElideRight
-                    font.pointSize: root.fontUnit
-                }
                 TextField {
                     id: clipIntensityEdit
-                    visible: false
+                    visible: true
                     width: parent.width
                     text: intensity
                     font.pointSize: root.fontUnit
@@ -391,7 +352,7 @@ Rectangle {
                         padding.bottom: 0
                         background: Rectangle {
                             radius: 2
-                            color: activePalette.window
+                            color: clipIntensityEdit.focus ? activePalette.window : "transparent"
                             anchors.fill: parent
                         }
                     }
@@ -400,8 +361,8 @@ Rectangle {
                         {
                             controller.requestSetIntensity(clipId, parseInt(text));
                             intensity = parseInt(text)
-                            visible = false
                         }
+                        clipIntensityEdit.focus = false
                     }
                 }
             }
