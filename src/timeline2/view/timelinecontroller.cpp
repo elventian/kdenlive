@@ -47,6 +47,7 @@
 #include "timeline2/model/trackmodel.hpp"
 #include "timeline2/view/dialogs/clipdurationdialog.h"
 #include "timeline2/view/dialogs/trackdialog.h"
+#include "timeline2/view/dialogs/featuredialog.h"
 #include "transitions/transitionsrepository.hpp"
 #include "audiomixer/mixermanager.hpp"
 
@@ -3336,5 +3337,15 @@ void TimelineController::deleteTrack(int tid)
 
 void TimelineController::showTrackSettings(int tid)
 {
-	qDebug() << "showTrackSettings" << tid;
+    qDebug() << "showTrackSettings" << tid;
+    QPointer<FeatureDialog> d = new FeatureDialog(m_model, tid, qApp->activeWindow());
+    if (d->exec() == QDialog::Accepted) 
+    {
+        qDebug() << "accepted" << tid;
+        std::shared_ptr<TrackModel> track = m_model->getTrackById(tid);
+        track->setName(d->getFeatureName());
+        track->setDescription(d->getFeatureDescription());
+        track->setRecommendedMin(d->getRecommendedMin());
+        track->setRecommendedMax(d->getRecommendedMax());
+    }
 }

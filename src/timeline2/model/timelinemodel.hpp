@@ -516,7 +516,8 @@ public:
         bool audioTrack = false, bool featureTrack = false);
     /* Same function, but accumulates undo and redo*/
     bool requestTrackInsertion(int pos, int &id, const QString &trackName, bool audioTrack, 
-        bool featureTrack, Fun &undo, Fun &redo, bool addCompositing = true);
+        bool featureTrack, Fun &undo, Fun &redo, bool addCompositing = true, 
+            const QString &description = QString(), int recMin = 1, int recMax = 1);
 
     /* @brief Delete track with given id
        This also deletes all the clips contained in the track.
@@ -686,6 +687,8 @@ public:
     /** @brief Import project's master effects */
     void importMasterEffects(std::weak_ptr<Mlt::Service> service);
 
+    const std::shared_ptr<TrackModel> getTrackById_const(int trackId) const;
+
 protected:
     /* @brief Register a new track. This is a call-back meant to be called from TrackModel
        @param pos indicates the number of the track we are adding. If this is -1, then we add at the end.
@@ -725,7 +728,6 @@ protected:
     /* @brief Helper function to get a pointer to the track, given its id
      */
     std::shared_ptr<TrackModel> getTrackById(int trackId);
-    const std::shared_ptr<TrackModel> getTrackById_const(int trackId) const;
 
     /*@brief Helper function to get a pointer to a clip, given its id*/
     std::shared_ptr<ClipModel> getClipPtr(int clipId) const;

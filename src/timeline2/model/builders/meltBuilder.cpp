@@ -88,11 +88,16 @@ bool constructTimelineFromMelt(const std::shared_ptr<TimelineItemModel> &timelin
             int tid;
             bool audioTrack = track->get_int("kdenlive:audio_track") == 1;
             bool featureTrack = track->get_int("kdenlive:feature_track") == 1;
+            QString description(track->get("kdenlive:feature_description"));
+            int recMin = track->get_int("kdenlive:feature_rec_min");
+            int recMax = track->get_int("kdenlive:feature_rec_max");
+            if (recMin == 0) recMin = 1;
+            if (recMax == 0) recMax = 1;
             if (!audioTrack) {
                 videoTracksIndexes << i;
             }
-            ok = timeline->requestTrackInsertion(-1, tid, QString(), audioTrack, featureTrack, 
-                undo, redo, false);
+            ok = timeline->requestTrackInsertion(-1, tid, QString(), audioTrack, featureTrack, undo, redo, false, 
+                description, recMin, recMax);
             if (track->get_int("kdenlive:locked_track") > 0) {
                 lockedTracksIndexes << tid;
             }

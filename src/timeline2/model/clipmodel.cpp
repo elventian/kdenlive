@@ -56,7 +56,6 @@ ClipModel::ClipModel(const std::shared_ptr<TimelineModel> &parent, std::shared_p
     if (featureClip) 
     {
         intensity = m_producer->get_int("kdenlive:intensity");
-        qDebug() << intensity;
     }
     if (binClip) {
         m_endlessResize = !binClip->hasLimitedDuration();
@@ -465,6 +464,7 @@ void ClipModel::refreshProducerFromBin(int trackId, PlaylistState::ClipState sta
     m_effectStack->resetService(m_producer);
     m_producer->set("kdenlive:id", binClip->clipId().toUtf8().constData());
     m_producer->set("_kdenlive_cid", m_id);
+	m_producer->set("kdenlive:intensity", intensity);
     m_endlessResize = !binClip->hasLimitedDuration();
 }
 

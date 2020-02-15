@@ -14,6 +14,7 @@ set(kdenlive_SRCS
   timeline2/view/dialogs/spacerdialog.cpp
   timeline2/view/dialogs/speeddialog.cpp
   timeline2/view/dialogs/trackdialog.cpp
+  timeline2/view/dialogs/featuredialog.cpp
   timeline2/view/previewmanager.cpp
   timeline2/view/qml/timelineitems.cpp
   timeline2/view/qmltypes/thumbnailprovider.cpp

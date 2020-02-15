@@ -59,7 +59,8 @@ public:
 private:
     /* This constructor is private, call the static construct instead */
     TrackModel(const std::weak_ptr<TimelineModel> &parent, int id = -1, const QString &trackName = QString(), 
-    bool audioTrack = false, bool featureTrack = false);
+        bool audioTrack = false, bool featureTrack = false, const QString &description = QString(), 
+        int recMin = 1, int recMax = 1);
     TrackModel(const std::weak_ptr<TimelineModel> &parent, Mlt::Tractor mltTrack, int id = -1);
 
 public:
@@ -69,7 +70,8 @@ public:
        @param pos is the optional position of the track. If left to -1, it will be added at the end
      */
     static int construct(const std::weak_ptr<TimelineModel> &parent, int id = -1, int pos = -1, 
-        const QString &trackName = QString(), bool audioTrack = false, bool featureTrack = false);
+        const QString &trackName = QString(), bool audioTrack = false, bool featureTrack = false, 
+        const QString &description = QString(), int recMin = 1, int recMax = 1);
 
     /* @brief returns the number of clips */
     int getClipsCount();
@@ -107,6 +109,15 @@ public:
     /* @brief Returns true if track is disabled
      */
     bool isMute() const;
+
+    void setName(const QString &name) const;
+    void setDescription(const QString &descr) const;
+    void setRecommendedMin(int min) const;
+    void setRecommendedMax(int max) const;
+
+    QString getDescription() const;
+    int getRecommendedMin() const;
+    int getRecommendedMax() const;
 
     // TODO make protected
     QVariant getProperty(const QString &name) const;

@@ -311,6 +311,16 @@ Rectangle {
             x: Math.max(2 * root.collapsedHeight + 2, parent.width - width - 4)
             spacing: 0
             ToolButton {
+                id: featureSettingsButton
+                implicitHeight: trackHeadRoot.iconSize
+                implicitWidth: trackHeadRoot.iconSize
+                iconName: 'configure'
+                onClicked: timeline.showTrackSettings(trackId)
+                tooltip: i18n("Feature settings")
+                visible: controller.isFeatureTrack(trackId)
+            }
+            ToolButton {
+                iconName: 'tools-wizard'
                 id: effectButton
                 focusPolicy: Qt.NoFocus
                 contentItem: Item {
@@ -410,15 +420,6 @@ Rectangle {
                         duration: 500
                     }
                  }
-            }
-            ToolButton {
-                id: featureSettingsButton
-                implicitHeight: trackHeadRoot.iconSize
-                implicitWidth: trackHeadRoot.iconSize
-                iconName: 'configure'
-                onClicked: timeline.showTrackSettings(trackId)
-                tooltip: i18n("Feature settings")
-                visible: controller.isFeatureTrack(trackId)
             }
         }
         Item {
