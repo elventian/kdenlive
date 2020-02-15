@@ -525,8 +525,13 @@ int TimelineItemModel::getFirstAudioTrackIndex() const
 const QString TimelineItemModel::getTrackFullName(int tid) const
 {
     QString tag = getTrackTagById(tid);
-    QString trackName = getTrackById_const(tid)->getProperty(QStringLiteral("kdenlive:track_name")).toString();
-    return trackName.isEmpty() ? tag : tag + QStringLiteral(" - ") + trackName;
+    QString trackName = getTrackName(tid);
+	return trackName.isEmpty() ? tag : tag + QStringLiteral(" - ") + trackName;
+}
+
+const QString TimelineItemModel::getTrackName(int tid) const
+{
+	return getTrackById_const(tid)->getProperty(QStringLiteral("kdenlive:track_name")).toString();
 }
 
 const QString TimelineItemModel::groupsData()

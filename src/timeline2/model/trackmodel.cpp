@@ -32,7 +32,7 @@
 #include <mlt++/MltTransition.h>
 
 TrackModel::TrackModel(const std::weak_ptr<TimelineModel> &parent, int id, const QString &trackName, 
-	bool audioTrack, bool featureTrack)
+	bool audioTrack, bool featureTrack, const QString &description, int recMin, int recMax)
     : m_parent(parent)
     , m_id(id == -1 ? TimelineModel::getNextId() : id)
     , m_lock(QReadWriteLock::Recursive)
@@ -44,8 +44,9 @@ TrackModel::TrackModel(const std::weak_ptr<TimelineModel> &parent, int id, const
         m_track->insert_track(m_playlists[0], 0);
         m_track->insert_track(m_playlists[1], 1);
         m_mainPlaylist = std::make_shared<Mlt::Producer>(&m_playlists[0]);
-        if (!trackName.isEmpty()) {
-            m_track->set("kdenlive:track_name", trackName.toUtf8().constData());
+        if (!trackName.isEmpty())
+		{
+			setName(trackName);
         }
         if (audioTrack) {
             m_track->set("kdenlive:audio_track", 1);
@@ -53,10 +54,14 @@ TrackModel::TrackModel(const std::weak_ptr<TimelineModel> &parent, int id, const
                 m_playlist.set("hide", 1);
             }
         }
-		if (featureTrack)
-		{
-			m_track->set("kdenlive:feature_track", 1);
+		if (featureTrack) 
+		{ 
+			if (!description.isEmpty())	{ setDescription(description); }
+			setRecommendedMin(recMin);
+			setRecommendedMax(recMax);
+			m_track->set("kdenlive:feature_track", 1); 
 		}
+		
         m_track->set("kdenlive:trackheight", KdenliveSettings::trackheight());
         m_effectStack = EffectStackModel::construct(m_mainPlaylist, {ObjectType::TimelineTrack, m_id}, ptr->m_undoStack);
         // TODO
@@ -97,9 +102,11 @@ TrackModel::~TrackModel()
 }
 
 int TrackModel::construct(const std::weak_ptr<TimelineModel> &parent, int id, int pos, 
-	const QString &trackName, bool audioTrack, bool featureTrack)
+	const QString &trackName, bool audioTrack, bool featureTrack, 
+	const QString &description, int recMin, int recMax)
 {
-    std::shared_ptr<TrackModel> track(new TrackModel(parent, id, trackName, audioTrack, featureTrack));
+    std::shared_ptr<TrackModel> track(new TrackModel(parent, id, trackName, audioTrack, 
+		featureTrack, description, recMin, recMax));
     TRACE_CONSTR(track.get(), parent, id, pos, trackName, audioTrack);
     id = track->m_id;
     if (auto ptr = parent.lock()) {
@@ -1286,6 +1293,7 @@ bool TrackModel::shouldReceiveTimelineOp() const
 
 bool TrackModel::isAudioTrack() const
 {
+	READ_LOCK();
     return m_track->get_int("kdenlive:audio_track") == 1;
 }
 
@@ -1296,6 +1304,7 @@ std::shared_ptr<Mlt::Tractor> TrackModel::getTrackService()
 
 PlaylistState::ClipState TrackModel::trackType() const
 {
+	READ_LOCK();
     return (m_track->get_int("kdenlive:audio_track") == 1 ? PlaylistState::AudioOnly : 
 			m_track->get_int("kdenlive:feature_track") == 1 ? PlaylistState::FeatureOnly :
 			PlaylistState::VideoOnly);
@@ -1308,7 +1317,52 @@ bool TrackModel::isHidden() const
 
 bool TrackModel::isMute() const
 {
-    return m_track->get_int("hide") & 2;
+	return m_track->get_int("hide") & 2;
+}
+
+void TrackModel::setName(const QString &name) const
+{
+	m_track->set("kdenlive:track_name", name.toUtf8().constData());
+	if (auto ptr = m_parent.lock()) {
+        QModelIndex ix = ptr->makeTrackIndexFromID(m_id);
+        ptr->dataChanged(ix, ix, {TimelineModel::NameRole});
+	}
+}
+
+void TrackModel::setDescription(const QString &descr) const
+{
+	READ_LOCK();
+	m_track->set("kdenlive:feature_description", descr.toUtf8().constData());
+}
+
+void TrackModel::setRecommendedMin(int min) const
+{
+	READ_LOCK();
+	m_track->set("kdenlive:feature_rec_min", min);
+}
+
+void TrackModel::setRecommendedMax(int max) const
+{
+	READ_LOCK();
+	m_track->set("kdenlive:feature_rec_max", max);
+}
+
+QString TrackModel::getDescription() const
+{
+	READ_LOCK();
+	return QString(m_track->get("kdenlive:feature_description"));
+}
+
+int TrackModel::getRecommendedMin() const
+{
+	READ_LOCK();
+	return m_track->get_int("kdenlive:feature_rec_min");
+}
+
+int TrackModel::getRecommendedMax() const
+{
+	READ_LOCK();
+	return m_track->get_int("kdenlive:feature_rec_max");
 }
 
 bool TrackModel::importEffects(std::weak_ptr<Mlt::Service> service)

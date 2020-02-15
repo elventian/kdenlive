@@ -303,6 +303,15 @@ Rectangle {
                 Layout.fillWidth: true
             }
             ToolButton {
+                id: featureSettingsButton
+                implicitHeight: trackHeadRoot.iconSize
+                implicitWidth: trackHeadRoot.iconSize
+                iconName: 'configure'
+                onClicked: timeline.showTrackSettings(trackId)
+                tooltip: i18n("Feature settings")
+                visible: controller.isFeatureTrack(trackId)
+            }
+            ToolButton {
                 iconName: 'tools-wizard'
                 checkable: true
                 enabled: trackHeadRoot.effectNames != ''
@@ -349,15 +358,6 @@ Rectangle {
                         duration: 500
                     }
                  }
-            }
-            ToolButton {
-                id: featureSettingsButton
-                implicitHeight: trackHeadRoot.iconSize
-                implicitWidth: trackHeadRoot.iconSize
-                iconName: 'configure'
-                onClicked: timeline.showTrackSettings(trackId)
-                tooltip: i18n("Feature settings")
-                visible: controller.isFeatureTrack(trackId)
             }
             
             //QIcon::fromTheme(QStringLiteral("configure"))

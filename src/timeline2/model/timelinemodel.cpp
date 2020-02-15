@@ -2250,7 +2250,7 @@ bool TimelineModel::requestTrackInsertion(int position, int &id, const QString &
 }
 
 bool TimelineModel::requestTrackInsertion(int position, int &id, const QString &trackName, bool audioTrack, 
-	bool featureTrack,	Fun &undo, Fun &redo, bool addCompositing)
+	bool featureTrack, Fun &undo, Fun &redo, bool addCompositing, const QString &description, int recMin, int recMax)
 {
     // TODO: make sure we disable overlayTrack before inserting a track
     if (position == -1) {
@@ -2266,7 +2266,8 @@ bool TimelineModel::requestTrackInsertion(int position, int &id, const QString &
     int trackId = TimelineModel::getNextId();
     id = trackId;
     Fun local_undo = deregisterTrack_lambda(trackId);
-    TrackModel::construct(shared_from_this(), trackId, position, trackName, audioTrack, featureTrack);
+    TrackModel::construct(shared_from_this(), trackId, position, trackName, audioTrack, featureTrack, 
+		description, recMin, recMax);
     // Adjust compositions that were affecting track at previous pos
     Fun local_update = [previousId, position, this]() {
         if (previousId > -1) {
