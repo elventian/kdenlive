@@ -32,7 +32,8 @@
 #include <mlt++/MltTransition.h>
 
 TrackModel::TrackModel(const std::weak_ptr<TimelineModel> &parent, int id, const QString &trackName, 
-	bool audioTrack, bool featureTrack, const QString &description, int recMin, int recMax)
+	bool audioTrack, bool featureTrack, 
+	const QString &description, const QString &recAction, const QString &recEq, int recIntensity)
     : m_parent(parent)
     , m_id(id == -1 ? TimelineModel::getNextId() : id)
     , m_lock(QReadWriteLock::Recursive)
@@ -57,8 +58,9 @@ TrackModel::TrackModel(const std::weak_ptr<TimelineModel> &parent, int id, const
 		if (featureTrack) 
 		{ 
 			if (!description.isEmpty())	{ setDescription(description); }
-			setRecommendedMin(recMin);
-			setRecommendedMax(recMax);
+			if (!recAction.isEmpty())	{ setRecommendedAction(recAction); }
+			if (!recEq.isEmpty())	    { setRecommendedEq(recEq); }
+			setRecommendedIntensity(recIntensity);
 			m_track->set("kdenlive:feature_track", 1); 
 		}
 		
@@ -103,10 +105,10 @@ TrackModel::~TrackModel()
 
 int TrackModel::construct(const std::weak_ptr<TimelineModel> &parent, int id, int pos, 
 	const QString &trackName, bool audioTrack, bool featureTrack, 
-	const QString &description, int recMin, int recMax)
+	const QString &description, const QString &recAction, const QString &recEq, int recIntensity)
 {
     std::shared_ptr<TrackModel> track(new TrackModel(parent, id, trackName, audioTrack, 
-		featureTrack, description, recMin, recMax));
+		featureTrack, description, recAction, recEq, recIntensity));
     TRACE_CONSTR(track.get(), parent, id, pos, trackName, audioTrack);
     id = track->m_id;
     if (auto ptr = parent.lock()) {
@@ -1335,16 +1337,22 @@ void TrackModel::setDescription(const QString &descr) const
 	m_track->set("kdenlive:feature_description", descr.toUtf8().constData());
 }
 
-void TrackModel::setRecommendedMin(int min) const
+void TrackModel::setRecommendedAction(const QString &action) const
 {
 	READ_LOCK();
-	m_track->set("kdenlive:feature_rec_min", min);
+	m_track->set("kdenlive:feature_rec_action", action.toUtf8().constData());
 }
 
-void TrackModel::setRecommendedMax(int max) const
+void TrackModel::setRecommendedEq(const QString &eq) const
 {
 	READ_LOCK();
-	m_track->set("kdenlive:feature_rec_max", max);
+	m_track->set("kdenlive:feature_rec_eq", eq.toUtf8().constData());
+}
+
+void TrackModel::setRecommendedIntensity(int intensity) const
+{
+	READ_LOCK();
+	m_track->set("kdenlive:feature_rec_intensity", intensity);
 }
 
 QString TrackModel::getDescription() const
@@ -1353,16 +1361,22 @@ QString TrackModel::getDescription() const
 	return QString(m_track->get("kdenlive:feature_description"));
 }
 
-int TrackModel::getRecommendedMin() const
+QString TrackModel::getRecommendedAction() const
 {
 	READ_LOCK();
-	return m_track->get_int("kdenlive:feature_rec_min");
+	return QString(m_track->get("kdenlive:feature_rec_action"));
 }
 
-int TrackModel::getRecommendedMax() const
+QString TrackModel::getRecommendedEq() const
 {
 	READ_LOCK();
-	return m_track->get_int("kdenlive:feature_rec_max");
+	return QString(m_track->get("kdenlive:feature_rec_eq"));
+}
+
+int TrackModel::getRecommendedIntensity() const
+{
+	READ_LOCK();
+	return m_track->get_int("kdenlive:feature_rec_intensity");
 }
 
 bool TrackModel::importEffects(std::weak_ptr<Mlt::Service> service)

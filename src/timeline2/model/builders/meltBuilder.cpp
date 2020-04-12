@@ -89,15 +89,15 @@ bool constructTimelineFromMelt(const std::shared_ptr<TimelineItemModel> &timelin
             bool audioTrack = track->get_int("kdenlive:audio_track") == 1;
 			bool featureTrack = track->get_int("kdenlive:feature_track") == 1;
 			QString description(track->get("kdenlive:feature_description"));
-			int recMin = track->get_int("kdenlive:feature_rec_min");
-			int recMax = track->get_int("kdenlive:feature_rec_max");
-			if (recMin == 0) recMin = 1;
-			if (recMax == 0) recMax = 1;
+			QString recEq(track->get("kdenlive:feature_rec_eq"));
+			QString recAction(track->get("kdenlive:feature_rec_action"));
+			int recIntensity = track->get_int("kdenlive:feature_rec_intensity");
+			if (recIntensity == 0) recIntensity = 1;
             if (!audioTrack) {
                 videoTracksIndexes << i;
             }
             ok = timeline->requestTrackInsertion(-1, tid, QString(), audioTrack, featureTrack, undo, redo, false, 
-				description, recMin, recMax);
+				description, recAction, recEq, recIntensity);
             if (track->get_int("kdenlive:locked_track") > 0) {
                 lockedTracksIndexes << tid;
             }

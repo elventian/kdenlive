@@ -516,7 +516,8 @@ public:
     /* Same function, but accumulates undo and redo*/
     bool requestTrackInsertion(int pos, int &id, const QString &trackName, bool audioTrack, 
 		bool featureTrack, Fun &undo, Fun &redo, bool addCompositing = true, 
-		const QString &description = QString(), int recMin = 1, int recMax = 1);
+		const QString &description = QString(), const QString &recAction = QString(), 
+		const QString &recEq = QString(), int recIntensity = 1);
 
     /* @brief Delete track with given id
        This also deletes all the clips contained in the track.
