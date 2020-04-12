@@ -3345,7 +3345,8 @@ void TimelineController::showTrackSettings(int tid)
         std::shared_ptr<TrackModel> track = m_model->getTrackById(tid);
         track->setName(d->getFeatureName());
         track->setDescription(d->getFeatureDescription());
-        track->setRecommendedMin(d->getRecommendedMin());
-        track->setRecommendedMax(d->getRecommendedMax());
+        track->setRecommendedAction(d->getRecommendedAction());
+        track->setRecommendedEq(d->getRecommendedEq());
+        track->setRecommendedIntensity(d->getRecommendedIntensity());
     }
 }

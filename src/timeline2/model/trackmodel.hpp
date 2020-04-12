@@ -60,7 +60,7 @@ private:
     /* This constructor is private, call the static construct instead */
     TrackModel(const std::weak_ptr<TimelineModel> &parent, int id = -1, const QString &trackName = QString(), 
         bool audioTrack = false, bool featureTrack = false, const QString &description = QString(), 
-        int recMin = 1, int recMax = 1);
+        const QString &recAction = QString(), const QString &recEq = QString(), int recIntensity = 1);
     TrackModel(const std::weak_ptr<TimelineModel> &parent, Mlt::Tractor mltTrack, int id = -1);
 
 public:
@@ -71,7 +71,8 @@ public:
      */
     static int construct(const std::weak_ptr<TimelineModel> &parent, int id = -1, int pos = -1, 
         const QString &trackName = QString(), bool audioTrack = false, bool featureTrack = false, 
-        const QString &description = QString(), int recMin = 1, int recMax = 1);
+        const QString &description = QString(), const QString &recAction = QString(), 
+        const QString &recEq = QString(), int recIntensity = 1);
 
     /* @brief returns the number of clips */
     int getClipsCount();
@@ -109,6 +110,17 @@ public:
     /* @brief Returns true if track is disabled
      */
     bool isMute() const;
+
+    void setName(const QString &name) const;
+    void setDescription(const QString &descr) const;
+    void setRecommendedAction(const QString &action) const;
+    void setRecommendedEq(const QString &eq) const;
+    void setRecommendedIntensity(int intensity) const;
+
+    QString getDescription() const;
+    QString getRecommendedAction() const;
+    QString getRecommendedEq() const;
+    int getRecommendedIntensity() const;
 
     void setName(const QString &name) const;
     void setDescription(const QString &descr) const;
