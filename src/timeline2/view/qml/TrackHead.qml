@@ -211,6 +211,7 @@ Rectangle {
                 tooltip: trackLabel.visible? i18n("Minimize") : i18n("Expand")
             }
             Item {
+                visible: !controller.isFeatureTrack(trackId)
                 width: trackTagLabel.contentWidth + 4
                 height: width
                 Layout.topMargin: 1
@@ -303,6 +304,24 @@ Rectangle {
                 Layout.fillWidth: true
             }
             ToolButton {
+                id: moveFeatureUpButton
+                implicitHeight: trackHeadRoot.iconSize
+                implicitWidth: trackHeadRoot.iconSize
+                iconName: 'arrow-up-double'
+                onClicked: timeline.moveTrack(trackId, true)
+                tooltip: i18n("Move up")
+                visible: controller.isFeatureTrack(trackId)
+            }
+            ToolButton {
+                id: moveFeatureDownButton
+                implicitHeight: trackHeadRoot.iconSize
+                implicitWidth: trackHeadRoot.iconSize
+                iconName: 'arrow-down-double'
+                onClicked: timeline.moveTrack(trackId, false)
+                tooltip: i18n("Move down")
+                visible: controller.isFeatureTrack(trackId)
+            }
+            ToolButton {
                 id: featureSettingsButton
                 implicitHeight: trackHeadRoot.iconSize
                 implicitWidth: trackHeadRoot.iconSize
@@ -331,6 +350,7 @@ Rectangle {
                 iconSource: isAudio ? (isDisabled ? 'qrc:///pics/kdenlive-hide-audio.svgz' : 'qrc:///pics/kdenlive-show-audio.svgz') : (isDisabled ? 'qrc:///pics/kdenlive-hide-video.svgz' : 'qrc:///pics/kdenlive-show-video.svgz')
                 onClicked: controller.setTrackProperty(trackId, "hide", isDisabled ? (isAudio ? '1' : '2') : '3')
                 tooltip: isAudio ? (isDisabled? i18n("Unmute") : i18n("Mute")) : (isDisabled? i18n("Show") : i18n("Hide"))
+                visible: !controller.isFeatureTrack(trackId)
             }
 
             ToolButton {

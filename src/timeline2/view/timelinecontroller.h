@@ -243,6 +243,10 @@ public:
 	
 	/* @brief Show settings of track*/
     Q_INVOKABLE void showTrackSettings(int tid);
+	
+    /* @brief Change order of tracks by moving track with tid up or down*/
+    Q_INVOKABLE void moveTrack(int tid, bool up);
+	
     /* @brief Group selected items in timeline
      */
     Q_INVOKABLE void groupSelection();

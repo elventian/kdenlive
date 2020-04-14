@@ -46,6 +46,7 @@
 #include <mlt++/MltTractor.h>
 #include <mlt++/MltTransition.h>
 #include <queue>
+#include <algorithm>
 
 #include "macros.hpp"
 
@@ -2327,33 +2328,36 @@ bool TimelineModel::requestTrackDeletion(int trackId)
     return result;
 }
 
-bool TimelineModel::requestTrackDeletion(int trackId, Fun &undo, Fun &redo)
+bool TimelineModel::requestTrackDeletion(int trackId, Fun &undo, Fun &redo, bool deleteClips)
 {
     Q_ASSERT(isTrack(trackId));
     if (m_allTracks.size() < 2) {
         pCore->displayMessage(i18n("Cannot delete last track in timeline"), InformationMessage, 500);
         return false;
     }
-    std::vector<int> clips_to_delete;
-    for (const auto &it : getTrackById(trackId)->m_allClips) {
-        clips_to_delete.push_back(it.first);
-    }
-    Fun local_undo = []() { return true; };
+	Fun local_undo = []() { return true; };
     Fun local_redo = []() { return true; };
-    for (int clip : clips_to_delete) {
-        bool res = true;
-        while (res && m_groups->isInGroup(clip)) {
-            res = requestClipUngroup(clip, local_undo, local_redo);
-        }
-        if (res) {
-            res = requestClipDeletion(clip, local_undo, local_redo);
-        }
-        if (!res) {
-            bool u = local_undo();
-            Q_ASSERT(u);
-            return false;
-        }
-    }
+	if (deleteClips)
+    {
+		std::vector<int> clips_to_delete;
+		for (const auto &it : getTrackById(trackId)->m_allClips) {
+			clips_to_delete.push_back(it.first);
+		}
+		for (int clip : clips_to_delete) {
+			bool res = true;
+			while (res && m_groups->isInGroup(clip)) {
+				res = requestClipUngroup(clip, local_undo, local_redo);
+			}
+			if (res) {
+				res = requestClipDeletion(clip, local_undo, local_redo);
+			}
+			if (!res) {
+				bool u = local_undo();
+				Q_ASSERT(u);
+				return false;
+			}
+		}
+	}
     int old_position = getTrackPosition(trackId);
     auto operation = deregisterTrack_lambda(trackId);
     std::shared_ptr<TrackModel> track = getTrackById(trackId);
@@ -3484,6 +3488,7 @@ const QString TimelineModel::getTrackTagById(int trackId) const
 {
     READ_LOCK();
     Q_ASSERT(isTrack(trackId));
+    if (getTrackById_const(trackId)->trackType() == PlaylistState::FeatureOnly) { return "F"; }
     bool isAudio = getTrackById_const(trackId)->isAudioTrack();
     int count = 1;
     int totalAudio = 2;
@@ -3812,4 +3817,30 @@ void TimelineModel::switchComposition(int cid, const QString &compoId)
     } else {
         undo();
     }
+}
+
+void TimelineModel::moveTrack(int trackId, bool up)
+{
+	std::shared_ptr<TrackModel> track = getTrackById(trackId);
+	int pos = getTrackPosition(trackId);
+	
+	int minPos = std::numeric_limits<int>::max();
+	int maxPos = std::numeric_limits<int>::min();
+	for (std::shared_ptr<TrackModel> &t: m_allTracks)
+	{
+		if (t->trackType() == PlaylistState::FeatureOnly)
+		{
+			int trackPos = getTrackPosition(t->getId());
+			minPos = std::min(minPos, trackPos);
+			maxPos = std::max(maxPos, trackPos);
+		}
+	}
+	if ((up && pos == maxPos) || (!up && pos == minPos)) { return; }
+	
+	if (up) { pos++; }
+	else { pos--; }
+	Fun undo = []() { return true; };
+    Fun redo = []() { return true; };
+	requestTrackDeletion(trackId, undo, redo, false);
+	registerTrack(track, pos);
 }

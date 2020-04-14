@@ -175,6 +175,9 @@ public:
 
     /* @brief returns the number of tracks */
     int getTracksCount() const;
+	
+    /* @brief Change position of track */
+    void moveTrack(int trackId, bool up);
 
     /* @brief returns the ids of all the tracks */
     std::unordered_set<int> getAllTracksIds() const;
@@ -527,7 +530,7 @@ public:
     */
     bool requestTrackDeletion(int trackId);
     /* Same function, but accumulates undo and redo*/
-    bool requestTrackDeletion(int trackId, Fun &undo, Fun &redo);
+    bool requestTrackDeletion(int trackId, Fun &undo, Fun &redo, bool deleteClips = true);
 
     /* @brief Get project duration
        Returns the duration in frames
