@@ -3350,3 +3350,8 @@ void TimelineController::showTrackSettings(int tid)
         track->setRecommendedIntensity(d->getRecommendedIntensity());
     }
 }
+
+void TimelineController::moveTrack(int tid, bool up)
+{
+    m_model->moveTrack(tid, up);
+}
