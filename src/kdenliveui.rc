@@ -255,6 +255,8 @@
     <Separator />
     <Action name="timeline_preview_button" />
     <Action name="audiomixer_button" />
+	<Action name="add_feature_button" />
+	<Action name="rm_feature_button" />
   </ToolBar>
   <ToolBar name="extraToolBar" >
     <text>Extra Toolbar</text>

@@ -746,6 +746,7 @@ Rectangle {
                 width: parent.width
                 height: ruler.height
                 Button {
+                    visible: false
                     text: parent.width > metrics.boundingRect.width * 1.4 ? metrics.text : "M"
                     anchors.fill: parent
                     anchors.leftMargin: 2

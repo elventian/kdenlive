@@ -331,6 +331,7 @@ Rectangle {
                 visible: controller.isFeatureTrack(trackId)
             }
             ToolButton {
+                visible: false
                 iconName: 'tools-wizard'
                 checkable: true
                 enabled: trackHeadRoot.effectNames != ''

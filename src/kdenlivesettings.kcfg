@@ -128,12 +128,12 @@
   <group name="project">
     <entry name="videotracks" type="Int">
       <label>Default number of video tracks.</label>
-      <default>2</default>
+      <default>1</default>
     </entry>
 
     <entry name="audiotracks" type="Int">
       <label>Default number of audio tracks.</label>
-      <default>2</default>
+      <default>1</default>
     </entry>
 
     <entry name="enableproxy" type="Bool">
