@@ -338,6 +338,7 @@ Rectangle {
                 visible: controller.isFeatureTrack(trackId)
             }
             ToolButton {
+                visible: false
                 iconName: 'tools-wizard'
                 id: effectButton
                 focusPolicy: Qt.NoFocus

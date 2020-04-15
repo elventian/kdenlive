@@ -423,6 +423,14 @@ void MainWindow::init()
         }
     });
 
+    QAction *addFeature = new QAction(QIcon::fromTheme(QStringLiteral("draw-cross")), i18n("Add Feature"), this);
+    addAction(QStringLiteral("add_feature_button"), addFeature);
+    QAction *rmFeature = new QAction(QIcon::fromTheme(QStringLiteral("delete")), i18n("Remove Feature"), this);
+    addAction(QStringLiteral("rm_feature_button"), rmFeature);
+
+    connect(addFeature, &QAction::triggered, this, &MainWindow::slotInsertTrack);
+    connect(rmFeature, &QAction::triggered, this, &MainWindow::slotDeleteTrack);
+
     // Close non-general docks for the initial layout
     // only show important ones
     m_undoViewDock->close();
