@@ -3984,11 +3984,12 @@ void TimelineModel::switchComposition(int cid, const QString &compoId)
     }
 }
 
-void TimelineModel::moveTrack(int trackId, bool up)
+int TimelineModel::moveTrack(int trackId, bool up)
 {
     std::shared_ptr<TrackModel> track = getTrackById(trackId);
-    int pos = getTrackPosition(trackId);
+    if (track->trackType() != PlaylistState::FeatureOnly) { return -1; }
 
+    int pos = getTrackPosition(trackId);
     int minPos = std::numeric_limits<int>::max();
     int maxPos = std::numeric_limits<int>::min();
     for (std::shared_ptr<TrackModel> &t: m_allTracks)
@@ -4000,12 +4001,13 @@ void TimelineModel::moveTrack(int trackId, bool up)
             maxPos = std::max(maxPos, trackPos);
         }
     }
-    if ((up && pos == maxPos) || (!up && pos == minPos)) { return; }
-    
+    if ((up && pos == maxPos) || (!up && pos == minPos)) { return -1; }
+
     if (up) { pos++; }
     else { pos--; }
     Fun undo = []() { return true; };
     Fun redo = []() { return true; };
     requestTrackDeletion(trackId, undo, redo, false);
     registerTrack(track, pos);
+    return pos;
 }

@@ -3351,7 +3351,11 @@ void TimelineController::showTrackSettings(int tid)
     }
 }
 
-void TimelineController::moveTrack(int tid, bool up)
+void TimelineController::moveTrack(bool up)
 {
-    m_model->moveTrack(tid, up);
+    int newPos = m_model->moveTrack(m_activeTrack, up);
+    if (newPos != -1)
+    {
+        setActiveTrack(m_model->getTrackIndexFromPosition(newPos));		
+    }
 }

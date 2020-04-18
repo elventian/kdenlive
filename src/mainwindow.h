@@ -384,6 +384,8 @@ private slots:
     void slotSeparateAudioChannel();
     void slotInsertTrack();
     void slotDeleteTrack();
+    void slotMoveFeatureUp();
+    void slotMoveFeatureDown();
     void slotShowTrackRec();
     /** @brief Select all clips in active track. */
     void slotSelectTrack();
