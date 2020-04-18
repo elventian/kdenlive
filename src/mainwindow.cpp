@@ -406,9 +406,15 @@ void MainWindow::init()
 	addAction(QStringLiteral("add_feature_button"), addFeature);
 	QAction *rmFeature = new QAction(QIcon::fromTheme(QStringLiteral("delete")), i18n("Remove Feature"), this);
 	addAction(QStringLiteral("rm_feature_button"), rmFeature);
+	QAction *moveUpFeature = new QAction(QIcon::fromTheme(QStringLiteral("arrow-up-double")), i18n("Move Up"), this);
+	addAction(QStringLiteral("moveup_feature_button"), moveUpFeature);
+	QAction *moveDownFeature = new QAction(QIcon::fromTheme(QStringLiteral("arrow-down-double")), i18n("Move Down"), this);
+	addAction(QStringLiteral("movedown_feature_button"), moveDownFeature);
 	
 	connect(addFeature, &QAction::triggered, this, &MainWindow::slotInsertTrack);
 	connect(rmFeature, &QAction::triggered, this, &MainWindow::slotDeleteTrack);
+	connect(moveUpFeature, &QAction::triggered, this, &MainWindow::slotMoveFeatureUp);
+	connect(moveDownFeature, &QAction::triggered, this, &MainWindow::slotMoveFeatureDown);
 	
     // Close non-general docks for the initial layout
     // only show important ones
@@ -2417,7 +2423,17 @@ void MainWindow::slotInsertTrack()
 void MainWindow::slotDeleteTrack()
 {
     pCore->monitorManager()->activateMonitor(Kdenlive::ProjectMonitor);
-    getCurrentTimeline()->controller()->deleteTrack(-1);
+	getCurrentTimeline()->controller()->deleteTrack(-1);
+}
+
+void MainWindow::slotMoveFeatureUp()
+{
+	getCurrentTimeline()->controller()->moveTrack(true);
+}
+
+void MainWindow::slotMoveFeatureDown()
+{
+	getCurrentTimeline()->controller()->moveTrack(false);
 }
 
 void MainWindow::slotSelectTrack()

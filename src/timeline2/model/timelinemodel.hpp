@@ -177,7 +177,7 @@ public:
     int getTracksCount() const;
 	
     /* @brief Change position of track */
-    void moveTrack(int trackId, bool up);
+    int moveTrack(int trackId, bool up);
 
     /* @brief returns the ids of all the tracks */
     std::unordered_set<int> getAllTracksIds() const;

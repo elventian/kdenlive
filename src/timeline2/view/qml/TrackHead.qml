@@ -304,24 +304,6 @@ Rectangle {
                 Layout.fillWidth: true
             }
             ToolButton {
-                id: moveFeatureUpButton
-                implicitHeight: trackHeadRoot.iconSize
-                implicitWidth: trackHeadRoot.iconSize
-                iconName: 'arrow-up-double'
-                onClicked: timeline.moveTrack(trackId, true)
-                tooltip: i18n("Move up")
-                visible: controller.isFeatureTrack(trackId)
-            }
-            ToolButton {
-                id: moveFeatureDownButton
-                implicitHeight: trackHeadRoot.iconSize
-                implicitWidth: trackHeadRoot.iconSize
-                iconName: 'arrow-down-double'
-                onClicked: timeline.moveTrack(trackId, false)
-                tooltip: i18n("Move down")
-                visible: controller.isFeatureTrack(trackId)
-            }
-            ToolButton {
                 id: featureSettingsButton
                 implicitHeight: trackHeadRoot.iconSize
                 implicitWidth: trackHeadRoot.iconSize

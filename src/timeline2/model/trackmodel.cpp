@@ -46,8 +46,8 @@ TrackModel::TrackModel(const std::weak_ptr<TimelineModel> &parent, int id, const
         m_track->insert_track(m_playlists[1], 1);
         m_mainPlaylist = std::make_shared<Mlt::Producer>(&m_playlists[0]);
         if (!trackName.isEmpty())
-		{
-			setName(trackName);
+        {
+            m_track->set("kdenlive:track_name", trackName.toUtf8().constData());
         }
         if (audioTrack) {
             m_track->set("kdenlive:audio_track", 1);

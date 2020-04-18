@@ -348,7 +348,7 @@ Rectangle {
                 radius: 2
                 border.color: clipIntensityEdit.hovered ? activePalette.highlight : 'transparent'
                 height: clipIntensityEdit.height
-                width: parent.width
+                width: parent.width < 15 ? 15 : parent.width / 2
                 visible: isFeature
                 anchors {
                     top: container.top
