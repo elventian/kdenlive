@@ -1306,6 +1306,15 @@ void Monitor::slotPlayZone(int in, int out, bool loop)
 	}
 }
 
+void Monitor::slotPlayFeature(const std::map<int, int> &intervals)
+{
+    slotActivateMonitor();
+    bool ok = m_glMonitor->playFeature(intervals);
+    if (ok) {
+        m_playAction->setActive(true);
+    }
+}
+
 void Monitor::slotLoopZone()
 {
     slotActivateMonitor();

@@ -28,6 +28,7 @@
 
 #include <KActionCollection>
 #include <QDir>
+#include <set>
 
 class PreviewManager;
 class QAction;
@@ -482,6 +483,8 @@ public:
     Q_INVOKABLE void showMasterEffects();
     /** @brief Return true if an instance of this bin clip is currently undet timeline cursor */
     bool refreshIfVisible(int cid);
+    /** @brief Return feature intervals of active track */
+    std::map<int, int> getActiveFeatureIntervals();
 
 public slots:
     void resetView();

@@ -2659,6 +2659,16 @@ bool TimelineController::refreshIfVisible(int cid)
     return false;
 }
 
+std::map<int, int> TimelineController::getActiveFeatureIntervals()
+{
+    std::map<int, int> res;
+    if (m_model->getTrackById_const(activeTrack())->trackType() != PlaylistState::FeatureOnly) {
+        return res; 
+    }
+    res = m_model->getTrackById_const(activeTrack())->getClipIntervals();
+    return res;
+}
+
 
 void TimelineController::createIntervalUnderCursor(int track)
 {
