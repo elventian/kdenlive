@@ -32,6 +32,7 @@
 
 #include <memory>
 #include <unordered_set>
+#include <set>
 
 class SnapModel;
 class ProjectClip;
@@ -288,6 +289,7 @@ public slots:
     void pause();
     void slotPlayZone();
     void slotPlayZone(int in, int out, bool loop);
+    void slotPlayFeature(const std::map<int, int> &intervals);
     void slotLoopZone();
     /** @brief Loops the selected item (clip or transition). */
     void slotLoopClip();

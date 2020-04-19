@@ -278,6 +278,7 @@
     <Action name="rm_feature_button" />
     <Action name="moveup_feature_button" />
     <Action name="movedown_feature_button" />
+    <Action name="play_feature_button" />
   </ToolBar>
   <ToolBar name="extraToolBar" >
     <text>Extra Toolbar</text>

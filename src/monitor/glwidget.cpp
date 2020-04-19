@@ -691,13 +691,22 @@ bool GLWidget::checkFrameNumber(int pos, int offset, bool isPlaying)
     const double speed = m_producer->get_speed();
     m_proxy->positionFromConsumer(pos, isPlaying);
     int maxPos = (m_isZoneMode || m_isLoopMode) ? m_proxy->zoneOut() : m_producer->get_int("out");
-    if (m_isLoopMode || m_isZoneMode) {
+    if (m_isLoopMode || m_isZoneMode || m_isFeatureMode) {
         if (isPlaying && pos >= maxPos) {
             m_consumer->purge();
-            if (!m_isLoopMode) {
+            int nextFrame = m_proxy->zoneIn();
+            if (m_isFeatureMode) {
+                auto it = m_intervals.lower_bound(pos);
+                if (it == m_intervals.end()) { return false; }
+                else {
+                nextFrame = it->first; 
+                m_producer->set("out", it->second);
+                }
+            }
+            else if (!m_isLoopMode) {
                 return false;
             }
-            m_producer->seek(m_proxy->zoneIn());
+            m_producer->seek(nextFrame);
             m_producer->set_speed(1.0);
             m_consumer->set("refresh", 1);
             return true;
@@ -1675,6 +1684,32 @@ bool GLWidget::playZone(int in, int out, bool loop)
     m_consumer->set("refresh", 1);
     m_isZoneMode = true;
     m_isLoopMode = loop;
+    m_isFeatureMode = false;
+    return true;
+}
+
+bool GLWidget::playFeature(const std::map<int, int> &intervals)
+{
+    m_intervals = intervals;
+    int curFrame = m_producer->frame();
+    auto pos = intervals.upper_bound(curFrame);
+    if (pos == intervals.end()) { pos = intervals.begin(); }
+    else if (pos != intervals.begin()) 
+    { 
+        pos--;
+        if (pos->second < curFrame) {pos++; }
+    }
+
+    m_producer->seek(pos->first);
+    m_consumer->purge();
+    m_producer->set("out", pos->second);
+    m_producer->set_speed(1.0);
+    m_consumer->start();
+    m_consumer->set("scrub_audio", 0);
+    m_consumer->set("refresh", 1);
+    m_isZoneMode = false;
+    m_isLoopMode = false;
+    m_isFeatureMode = true;
     return true;
 }
 
@@ -1696,6 +1731,7 @@ bool GLWidget::loopClip()
     m_consumer->set("refresh", 1);
     m_isZoneMode = true;
     m_isLoopMode = true;
+    m_isFeatureMode = false;
     return true;
 }
 

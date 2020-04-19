@@ -423,19 +423,27 @@ void MainWindow::init()
         }
     });
 
-    QAction *addFeature = new QAction(QIcon::fromTheme(QStringLiteral("draw-cross")), i18n("Add Feature"), this);
+    QAction *addFeature = new QAction(QIcon::fromTheme(QStringLiteral("draw-cross")), 
+        i18n("Add Feature"), this);
     addAction(QStringLiteral("add_feature_button"), addFeature);
-    QAction *rmFeature = new QAction(QIcon::fromTheme(QStringLiteral("delete")), i18n("Remove Feature"), this);
+    QAction *rmFeature = new QAction(QIcon::fromTheme(QStringLiteral("delete")), 
+        i18n("Remove Feature"), this);
     addAction(QStringLiteral("rm_feature_button"), rmFeature);
-    QAction *moveUpFeature = new QAction(QIcon::fromTheme(QStringLiteral("arrow-up-double")), i18n("Move Up"), this);
+    QAction *moveUpFeature = new QAction(QIcon::fromTheme(QStringLiteral("arrow-up-double")), 
+        i18n("Move Up"), this);
     addAction(QStringLiteral("moveup_feature_button"), moveUpFeature);
-    QAction *moveDownFeature = new QAction(QIcon::fromTheme(QStringLiteral("arrow-down-double")), i18n("Move Down"), this);
+    QAction *moveDownFeature = new QAction(QIcon::fromTheme(QStringLiteral("arrow-down-double")), 
+        i18n("Move Down"), this);
     addAction(QStringLiteral("movedown_feature_button"), moveDownFeature);
+    QAction *playFeature = new QAction(QIcon::fromTheme(QStringLiteral("media-playback-start")), 
+        i18n("Play Feature"), this);
+    addAction(QStringLiteral("play_feature_button"), playFeature);
 
     connect(addFeature, &QAction::triggered, this, &MainWindow::slotInsertTrack);
     connect(rmFeature, &QAction::triggered, this, &MainWindow::slotDeleteTrack);
     connect(moveUpFeature, &QAction::triggered, this, &MainWindow::slotMoveFeatureUp);
     connect(moveDownFeature, &QAction::triggered, this, &MainWindow::slotMoveFeatureDown);
+    connect(playFeature, &QAction::triggered, this, &MainWindow::slotPlayFeature);
 
     // Close non-general docks for the initial layout
     // only show important ones
@@ -2627,6 +2635,20 @@ void MainWindow::slotMoveFeatureUp()
 void MainWindow::slotMoveFeatureDown()
 {
     getCurrentTimeline()->controller()->moveTrack(false);
+}
+
+void MainWindow::slotPlayFeature()
+{
+    const std::map<int, int> &&intervals = getCurrentTimeline()->controller()->getActiveFeatureIntervals();
+    if (!intervals.empty())
+    {
+        m_projectMonitor->slotPlayFeature(intervals);
+    }
+
+    for (auto p: intervals)
+    {
+        qDebug() << p.first << p.second;
+    }
 }
 
 void MainWindow::slotShowTrackRec()

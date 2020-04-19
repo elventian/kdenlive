@@ -31,6 +31,7 @@
 #include <mlt++/MltTractor.h>
 #include <unordered_map>
 #include <unordered_set>
+#include <set>
 
 class TimelineModel;
 class ClipModel;
@@ -284,6 +285,8 @@ protected:
 
     /* @brief Returns the list of the ids of the clips that intersect the given range */
     std::unordered_set<int> getClipsInRange(int position, int end = -1);
+    /* @brief Returns the list of the ids of the clips that intersect the given range */
+    std::map<int, int> getClipIntervals();
     /* @brief Returns the list of the ids of the compositions that intersect the given range */
     std::unordered_set<int> getCompositionsInRange(int position, int end);
 

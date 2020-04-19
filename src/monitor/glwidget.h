@@ -31,6 +31,7 @@
 #include <QSemaphore>
 #include <QThread>
 #include <QTimer>
+#include <set>
 
 #include "bin/model/markerlistmodel.hpp"
 #include "definitions.h"
@@ -124,6 +125,7 @@ public:
     MonitorProxy *getControllerProxy();
     bool playZone(bool loop = false);
     bool playZone(int in, int out, bool loop = false);
+    bool playFeature(const std::map<int, int> &intervals);
     bool loopClip();
     void startConsumer();
     void stop();
@@ -232,9 +234,11 @@ private:
     bool m_sendFrame;
     bool m_isZoneMode;
     bool m_isLoopMode;
+    bool m_isFeatureMode;
     QPoint m_offset;
     MonitorProxy *m_proxy;
     std::shared_ptr<Mlt::Producer> m_blackClip;
+    std::map<int, int> m_intervals;
     static void on_frame_show(mlt_consumer, void *self, mlt_frame frame);
     static void on_frame_render(mlt_consumer, GLWidget *widget, mlt_frame frame);
     static void on_gl_frame_show(mlt_consumer, void *self, mlt_frame frame_ptr);

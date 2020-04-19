@@ -754,6 +754,17 @@ std::unordered_set<int> TrackModel::getClipsInRange(int position, int end)
     return ids;
 }
 
+std::map<int, int> TrackModel::getClipIntervals()
+{
+    std::map<int, int> res;
+    for (auto it = m_allClips.begin(); it != m_allClips.end(); it++)
+    {
+        std::shared_ptr<ClipModel> &clip = it->second;
+        res[clip->getPosition()] = clip->getPosition() + clip->getPlaytime() - 1;
+    }
+    return res;
+}
+
 int TrackModel::getRowfromClip(int clipId) const
 {
     READ_LOCK();
