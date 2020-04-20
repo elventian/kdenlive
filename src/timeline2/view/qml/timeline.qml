@@ -921,8 +921,13 @@ Rectangle {
                         }
                     }
                     if (dragProxy.draggedItem > -1) {
-                        mouse.accepted = false
-                        return
+                        if (!controller.isItem(dragProxy.draggedItem)){
+                            endDrag()
+                        }
+                        else {
+                            mouse.accepted = false
+                            return
+                        }
                     }
                     if (root.activeTool === 2 && mouse.y > ruler.height) {
                         // spacer tool
@@ -942,10 +947,8 @@ Rectangle {
                             controller.requestClearSelection();
                         }
                         proxy.position = Math.min((scrollView.flickableItem.contentX + mouse.x) / timeline.scaleFactor, timeline.fullDuration - 1)
-                        var clickedTrack = tracksRepeater.itemAt(Logic.getTrackIndexFromPos(mouse.y - ruler.height + scrollView.flickableItem.contentY)).trackInternalId
-                        timeline.createIntervalUnderCursor(clickedTrack)
                     }
-                } else if (mouse.button & Qt.RightButton) {
+                } else if (mouse.button & Qt.RightButton && mouse.modifiers & Qt.ShiftModifier) {
                     menu.clickedX = mouse.x
                     menu.clickedY = mouse.y
                     if (mouse.y > ruler.height) {
@@ -955,6 +958,11 @@ Rectangle {
                         // ruler menu
                         rulermenu.popup()
                     }
+                }
+                else if (mouse.button & Qt.RightButton) {
+                    var clickedTrack = tracksRepeater.itemAt(Logic.getTrackIndexFromPos
+                        (mouse.y - ruler.height + scrollView.flickableItem.contentY)).trackInternalId
+                    timeline.createIntervalUnderCursor(clickedTrack)
                 }
             }
             property bool scim: false
