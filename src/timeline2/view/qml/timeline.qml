@@ -807,8 +807,13 @@ Rectangle {
                         }
                     }
                     if (dragProxy.draggedItem > -1) {
+                        if (!controller.isItem(dragProxy.draggedItem)){
+                            endDrag()
+                        }
+                        else {
                         mouse.accepted = false
                         return
+                        }
                     }
                     if (root.activeTool === 2 && mouse.y > ruler.height) {
                         // spacer tool
@@ -828,10 +833,8 @@ Rectangle {
                             controller.requestClearSelection();
                         }
                         proxy.position = Math.min((scrollView.contentX + mouse.x) / timeline.scaleFactor, timeline.fullDuration - 1)
-                        var clickedTrack = tracksRepeater.itemAt(Logic.getTrackIndexFromPos(mouse.y - ruler.height + scrollView.flickableItem.contentY)).trackInternalId
-                        timeline.createIntervalUnderCursor(clickedTrack)
                     }
-                } else if (mouse.button & Qt.RightButton) {
+                } else if (mouse.button & Qt.RightButton && mouse.modifiers & Qt.ShiftModifier) {
                     if (mouse.y > ruler.height) {
                         timeline.activeTrack = tracksRepeater.itemAt(Logic.getTrackIndexFromPos(mouse.y - ruler.height + scrollView.contentY)).trackInternalId
                         root.mainFrame = Math.floor((mouse.x + scrollView.contentX) / timeline.scaleFactor)
@@ -840,6 +843,11 @@ Rectangle {
                         // ruler menu
                         root.showRulerMenu()
                     }
+                }
+                else if (mouse.button & Qt.RightButton) {
+                    var clickedTrack = tracksRepeater.itemAt(Logic.getTrackIndexFromPos
+                        (mouse.y - ruler.height + scrollView.flickableItem.contentY)).trackInternalId
+                    timeline.createIntervalUnderCursor(clickedTrack)
                 }
             }
             property bool scim: false
