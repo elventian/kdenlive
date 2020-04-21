@@ -196,6 +196,10 @@ Rectangle {
     }
 
     function getColor() {
+        if (isFeature){
+            var featureColors = ["#aaccff", "#aaffcc", "#ccffaa", "#ccaaff", "#ffaacc", "ffccaa"]
+            return featureColors[controller.getTrackNum(clipRoot.trackId) % featureColors.length]
+        }
         if (clipStatus == ClipState.Disabled) {
             return 'grey'
         }

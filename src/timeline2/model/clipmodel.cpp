@@ -335,12 +335,6 @@ void ClipModel::setIntensity(int value)
 {
     intensity = value;
     m_producer->set("kdenlive:intensity", value);
-    if (auto ptr = m_parent.lock()) 
-    {
-        QModelIndex ix = ptr->makeClipIndexFromID(m_id);
-        QVector<int> roles{TimelineModel::GetIntensityRole};
-        ptr->notifyChange(ix, ix, roles);
-    }
 }
 
 int ClipModel::getPlaytime() const

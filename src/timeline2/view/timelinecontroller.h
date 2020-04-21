@@ -353,7 +353,7 @@ public:
 	
 	/* @brief Create feature interval under cursor
      */
-    Q_INVOKABLE void createIntervalUnderCursor(int track);
+    Q_INVOKABLE void createIntervalAt(int track, int position);
     /* @brief Request a spacer operation
      */
     Q_INVOKABLE int requestSpacerStartOperation(int trackId, int position);

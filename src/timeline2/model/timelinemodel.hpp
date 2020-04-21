@@ -265,6 +265,8 @@ public:
     Q_INVOKABLE int getPreviousTrackId(int trackId);
     /** @brief Return the next track of same type as source trackId, or trackId if no track found */
     Q_INVOKABLE int getNextTrackId(int trackId);
+     /** @brief Return track order num by id */
+    Q_INVOKABLE int getTrackNum(int trackId);
 
     /* @brief Returns the in cut position of a clip
        @param clipId Id of the clip to test

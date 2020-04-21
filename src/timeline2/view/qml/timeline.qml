@@ -847,7 +847,8 @@ Rectangle {
                 else if (mouse.button & Qt.RightButton) {
                     var clickedTrack = tracksRepeater.itemAt(Logic.getTrackIndexFromPos
                         (mouse.y - ruler.height + scrollView.flickableItem.contentY)).trackInternalId
-                    timeline.createIntervalUnderCursor(clickedTrack)
+                    timeline.createIntervalAt(clickedTrack, 
+                        (scrollView.flickableItem.contentX + mouse.x) / timeline.scaleFactor)
                 }
             }
             property bool scim: false
