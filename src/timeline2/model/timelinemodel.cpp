@@ -3558,6 +3558,21 @@ int TimelineModel::getNextTrackId(int trackId)
     return it == m_allTracks.cend() ? trackId : (*it)->getId();
 }
 
+int TimelineModel::getTrackNum(int trackId)
+{
+    READ_LOCK();
+    if (!isTrack(trackId)) { return 0; }
+    
+    int i = 0;
+    for (std::shared_ptr<TrackModel> &track: m_allTracks)
+    {
+        if (track->getId() == trackId) { return i; }
+        i++;
+    }
+    return i;
+}
+
+
 bool TimelineModel::requestClearSelection(bool onDeletion)
 {
     QWriteLocker locker(&m_lock);

@@ -2670,25 +2670,34 @@ std::map<int, int> TimelineController::getActiveFeatureIntervals()
 }
 
 
-void TimelineController::createIntervalUnderCursor(int track)
+void TimelineController::createIntervalAt(int track, int position)
 {
-	if (m_model->getTrackById_const(track)->trackType() != PlaylistState::FeatureOnly) { return; }
-		
-	QString binClipId = pCore->projectItemModel()->getClipIdByName("feature_binclip");
-	if (binClipId.isEmpty())
-	{
-		qDebug() << "Error: no feature_binclip in project!";
-		return;
-	}
-
-	int intervalId;
-	int position = m_model->suggestSnapPoint(pCore->getTimelinePosition(), 100);
-	int nextSnapPoint = m_model->getNextSnapPos(position);
-	if (m_model->requestClipInsertion(binClipId, track, position, intervalId, true, true, false))
-	{
-		int size = nextSnapPoint - position;
-		if (size > 0) { m_model->requestItemResize(intervalId, size, true); }
-	}
+    if (m_model->getTrackById_const(track)->trackType() != PlaylistState::FeatureOnly) { return; }
+        
+    QString binClipId = pCore->projectItemModel()->getClipIdByName("feature_binclip");
+    if (binClipId.isEmpty())
+    {
+        qDebug() << "Error: no feature_binclip in project!";
+        return;
+    }
+    
+    if (pCore->projectItemModel()->getClipByBinID(binClipId)->getProducerDuration() > 1)
+    {
+        pCore->projectItemModel()->getClipByBinID(binClipId)->setProducerProperty("length", 1);
+    }
+    
+    int intervalId;
+    int intervalBegin = m_model->getPreviousSnapPos(position);
+    int intervalEnd = m_model->getNextSnapPos(position);
+    int defaultIntervalLen = 2000 / scaleFactor();
+    if (position - intervalBegin > defaultIntervalLen / 2) { intervalBegin = position; }
+    if (intervalEnd - position > defaultIntervalLen) { intervalEnd = intervalBegin + defaultIntervalLen;}
+    
+    if (m_model->requestClipInsertion(binClipId, track, intervalBegin, intervalId, true, true, false))
+    {
+        int size = intervalEnd - intervalBegin;
+        if (size > 0) { m_model->requestItemResize(intervalId, size, true); }
+    }
 }
 
 

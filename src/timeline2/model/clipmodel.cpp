@@ -315,19 +315,13 @@ std::shared_ptr<Mlt::Producer> ClipModel::getProducer()
 
 int ClipModel::getIntensity() const
 {
-	return intensity;
+    return intensity;
 }
 
 void ClipModel::setIntensity(int value)
 {
-	intensity = value;
-	getProducer()->set("kdenlive:intensity", value);
-	if (auto ptr = m_parent.lock()) 
-	{
-		QModelIndex ix = ptr->makeClipIndexFromID(m_id);
-		QVector<int> roles{TimelineModel::GetIntensityRole};
-		ptr->notifyChange(ix, ix, roles);
-	}
+    intensity = value;
+    getProducer()->set("kdenlive:intensity", value);
 }
 
 int ClipModel::getPlaytime() const
