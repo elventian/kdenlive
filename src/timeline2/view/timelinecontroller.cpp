@@ -3291,11 +3291,6 @@ void TimelineController::createIntervalAt(int track, int position)
         return;
     }
     
-    if (pCore->projectItemModel()->getClipByBinID(binClipId)->getProducerDuration() > 1)
-    {
-        pCore->projectItemModel()->getClipByBinID(binClipId)->setProducerProperty("length", 1);
-    }
-    
     int intervalId;
     int intervalBegin = m_model->getPreviousSnapPos(position);
     int intervalEnd = m_model->getNextSnapPos(position);
