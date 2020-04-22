@@ -191,8 +191,23 @@ Rectangle {
 
     function getColor() {
         if (isFeature){
-            var featureColors = ["#aaccff", "#aaffcc", "#ccffaa", "#ccaaff", "#ffaacc", "ffccaa"]
-            return featureColors[controller.getTrackNum(clipRoot.trackId) % featureColors.length]
+            var featureColors = ["#858585", "#9e9e9e", "#b3b3b3", "#cdcdcd",
+                                 "#8b97c8", "#8ba688", "#ae9a88", "#ab8bc2", 
+                                 "#afb5d0", "#a8c0a4", "#c9c5b8", "#bb8a8a",
+                                 "#8bc6c6", "#d4ce8c", "#d4af8c", "#cfbecb"]
+            if (clipRoot.trackId == -1) {
+                return featureColors[0]
+            }
+            else {
+                var trackName = controller.getTrackName(clipRoot.trackId)
+                if (trackName.length === 0) {
+                    return featureColors[controller.getTrackNum(clipRoot.trackId) % featureColors.length]
+                }
+                else {
+                    console.log("MD5: " + parseInt(Qt.md5(trackName).charAt(0), 16) + ", " + Qt.md5(trackName))
+                    return featureColors[parseInt(Qt.md5(trackName).charAt(0), 16) % featureColors.length]
+                }
+            }
         }
         if (clipStatus == ClipState.Disabled) {
             return 'grey'
