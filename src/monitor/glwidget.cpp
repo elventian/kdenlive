@@ -1637,10 +1637,7 @@ void GLWidget::switchPlay(bool play, double speed)
     if (!m_producer || !m_consumer) {
         return;
     }
-    if (m_isZoneMode) {
-        resetZoneMode();
-    }
-    m_isFeatureMode = false;
+    resetZoneMode();
     if (play) {
         if (m_id == Kdenlive::ClipMonitor && m_consumer->position() == m_producer->get_out() && speed > 0) {
             m_producer->seek(0);
@@ -1738,12 +1735,13 @@ bool GLWidget::loopClip()
 
 void GLWidget::resetZoneMode()
 {
-    if (!m_isZoneMode && !m_isLoopMode) {
+    if (!m_isZoneMode && !m_isLoopMode && !m_isFeatureMode) {
         return;
     }
     m_producer->set("out", m_producer->get_length());
     m_isZoneMode = false;
     m_isLoopMode = false;
+    m_isFeatureMode = false;
 }
 
 MonitorProxy *GLWidget::getControllerProxy()

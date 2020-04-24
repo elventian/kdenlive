@@ -210,7 +210,6 @@ Rectangle {
                     return featureColors[controller.getTrackNum(clipRoot.trackId) % featureColors.length]
                 }
                 else {
-                    console.log("MD5: " + parseInt(Qt.md5(trackName).charAt(0), 16) + ", " + Qt.md5(trackName))
                     return featureColors[parseInt(Qt.md5(trackName).charAt(0), 16) % featureColors.length]
                 }
             }
