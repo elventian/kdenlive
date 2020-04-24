@@ -191,10 +191,9 @@ void MixerWidget::buildUI(Mlt::Tractor *service, const QString &trackTag)
             m_balanceDial->setValue(val);
         }
     }
-	
     // Build default filters if not found
     if (m_levelFilter == nullptr) {
-        m_levelFilter.reset(new Mlt::Filter(*service->profile(), "volume"));
+        m_levelFilter.reset(new Mlt::Filter(service->get_profile(), "volume"));
         if (m_levelFilter->is_valid()) {
             m_levelFilter->set("internal_added", 237);
             m_levelFilter->set("disable", 1);
@@ -202,7 +201,7 @@ void MixerWidget::buildUI(Mlt::Tractor *service, const QString &trackTag)
         }
     }
     if (m_balanceFilter == nullptr) {
-        m_balanceFilter.reset(new Mlt::Filter(*service->profile(), "panner"));
+        m_balanceFilter.reset(new Mlt::Filter(service->get_profile(), "panner"));
         if (m_balanceFilter->is_valid()) {
             m_balanceFilter->set("internal_added", 237);
             m_balanceFilter->set("start", 0.5);
@@ -212,7 +211,7 @@ void MixerWidget::buildUI(Mlt::Tractor *service, const QString &trackTag)
     }
     // Monitoring should be appended last so that other effects are reflected in audio monitor
     if (m_monitorFilter == nullptr) {
-        m_monitorFilter.reset(new Mlt::Filter(*service->profile(), "audiolevel"));
+        m_monitorFilter.reset(new Mlt::Filter(service->get_profile(), "audiolevel"));
         if (m_monitorFilter->is_valid()) {
             m_monitorFilter->set("iec_scale", 0);
             service->attach(*m_monitorFilter.get());
