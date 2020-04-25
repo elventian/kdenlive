@@ -118,7 +118,11 @@ Rectangle {
         }
     }
     ToolTip {
-        visible: mouseArea.containsMouse && !dragProxyArea.pressed && !trimInMouseArea.containsMouse && !trimOutMouseArea.containsMouse && !fadeInMouseArea.containsMouse && !fadeOutMouseArea.containsMouse && !fadeInMouseArea.drag.active && !fadeOutMouseArea.drag.active && !trimInMouseArea.drag.active && !trimOutMouseArea.drag.active
+        visible: mouseArea.containsMouse && !dragProxyArea.pressed && !trimInMouseArea.containsMouse && 
+                 !trimOutMouseArea.containsMouse && !fadeInMouseArea.containsMouse && 
+                 !fadeOutMouseArea.containsMouse && !fadeInMouseArea.drag.active && 
+                 !fadeOutMouseArea.drag.active && !trimInMouseArea.drag.active && 
+                 !trimOutMouseArea.drag.active && !isFeature
         delay: 1000
         timeout: 5000
         background: Rectangle {
@@ -811,7 +815,7 @@ Rectangle {
             height: width
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
-            visible: !clipRoot.isAudio
+            visible: !clipRoot.isAudio && !clipRoot.isFeature
             enabled: !clipRoot.isAudio && dragProxy.draggedItem === clipRoot.clipId && compositionIn.visible
             onPressed: {
                 timeline.addCompositionToClip('', clipRoot.clipId, 0)
@@ -856,7 +860,7 @@ Rectangle {
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
             enabled: !clipRoot.isAudio && dragProxy.draggedItem === clipRoot.clipId && compositionOut.visible
-            visible: !clipRoot.isAudio
+            visible: !clipRoot.isAudio && !clipRoot.isFeature
             onPressed: {
                 timeline.addCompositionToClip('', clipRoot.clipId, clipRoot.clipDuration - 1)
             }
@@ -904,7 +908,7 @@ Rectangle {
             drag.axis: Drag.XAxis
             drag.minimumX: - Math.ceil(width / 2)
             drag.maximumX: container.width + Math.ceil(width / 4)
-            visible: clipRoot.width > 3 * width && mouseArea.containsMouse && !dragProxyArea.pressed
+            visible:  !clipRoot.isFeature && clipRoot.width > 3 * width && mouseArea.containsMouse && !dragProxyArea.pressed
             property int startFadeOut
             property int lastDuration: -1
             drag.smoothed: false
@@ -998,7 +1002,7 @@ Rectangle {
             drag.axis: Drag.XAxis
             drag.smoothed: false
             property int startFadeIn
-            visible: clipRoot.width > 3 * width && mouseArea.containsMouse && !dragProxyArea.pressed
+            visible: !clipRoot.isFeature && clipRoot.width > 3 * width && mouseArea.containsMouse && !dragProxyArea.pressed
             onClicked: {
                 if (clipRoot.fadeIn == 0) {
                     timeline.adjustFade(clipRoot.clipId, 'fadein', 0, -2)
