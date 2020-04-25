@@ -123,15 +123,6 @@ public:
     QString getRecommendedEq() const;
     int getRecommendedIntensity() const;
 
-    void setName(const QString &name) const;
-    void setDescription(const QString &descr) const;
-    void setRecommendedMin(int min) const;
-    void setRecommendedMax(int max) const;
-
-    QString getDescription() const;
-    int getRecommendedMin() const;
-    int getRecommendedMax() const;
-
     // TODO make protected
     QVariant getProperty(const QString &name) const;
     void setProperty(const QString &name, const QString &value);
