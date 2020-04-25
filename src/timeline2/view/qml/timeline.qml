@@ -788,6 +788,7 @@ Rectangle {
                     clickY = mouseY
                     return
                 }
+                var y = mouse.y - ruler.height + scrollView.contentY
                 if (root.activeTool === 0 && shiftPress && mouse.y > ruler.height) {
                         // rubber selection
                         rubberSelect.clickX = mouse.x + scrollView.contentX
@@ -801,7 +802,6 @@ Rectangle {
                 } else if (mouse.button & Qt.LeftButton) {
                     if (root.activeTool === 1) {
                         // razor tool
-                        var y = mouse.y - ruler.height + scrollView.contentY
                         if (y >= 0) {
                             timeline.cutClipUnderCursor((scrollView.contentX + mouse.x) / timeline.scaleFactor, tracksRepeater.itemAt(Logic.getTrackIndexFromPos(y)).trackInternalId)
                         }
@@ -817,7 +817,6 @@ Rectangle {
                     }
                     if (root.activeTool === 2 && mouse.y > ruler.height) {
                         // spacer tool
-                        var y = mouse.y - ruler.height + scrollView.contentY
                         var frame = (scrollView.contentX + mouse.x) / timeline.scaleFactor
                         var track = (mouse.modifiers & Qt.ControlModifier) ? tracksRepeater.itemAt(Logic.getTrackIndexFromPos(y)).trackInternalId : -1
                         spacerGroup = timeline.requestSpacerStartOperation(track, frame)
@@ -845,10 +844,9 @@ Rectangle {
                     }
                 }
                 else if (mouse.button & Qt.RightButton) {
-                    var clickedTrack = tracksRepeater.itemAt(Logic.getTrackIndexFromPos
-                        (mouse.y - ruler.height + scrollView.flickableItem.contentY)).trackInternalId
+                    var clickedTrack = tracksRepeater.itemAt(Logic.getTrackIndexFromPos(y)).trackInternalId
                     timeline.createIntervalAt(clickedTrack, 
-                        (scrollView.flickableItem.contentX + mouse.x) / timeline.scaleFactor)
+                        (scrollView.contentX + mouse.x) / timeline.scaleFactor)
                 }
             }
             property bool scim: false

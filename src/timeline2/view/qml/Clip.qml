@@ -630,6 +630,7 @@ Rectangle {
                 // Clipping container for clip names
                 anchors.fill: parent
                 clip: true
+                visible: !isFeature
                 Rectangle {
                     // Clip name background
                     id: labelRect

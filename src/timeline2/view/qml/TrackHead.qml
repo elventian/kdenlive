@@ -312,16 +312,36 @@ Rectangle {
             spacing: 0
             ToolButton {
                 id: featureSettingsButton
-                implicitHeight: trackHeadRoot.iconSize
-                implicitWidth: trackHeadRoot.iconSize
-                iconName: 'configure'
+                width: root.collapsedHeight
+                height: root.collapsedHeight
                 onClicked: timeline.showTrackSettings(trackId)
-                tooltip: i18n("Feature settings")
                 visible: controller.isFeatureTrack(trackId)
+                contentItem: Item {
+                    Image {
+                        source: "image://icon/configure"
+                        anchors.centerIn: parent
+                        width: root.collapsedHeight - 4
+                        height: root.collapsedHeight - 4
+                        cache: root.paletteUnchanged
+                    }
+                }
+                ToolTip {
+                    visible: featureSettingsButton.hovered
+                    font: miniFont
+                    delay: 1500
+                    timeout: 5000
+                    background: Rectangle {
+                        color: activePalette.alternateBase
+                        border.color: activePalette.light
+                    }
+                    contentItem: Label {
+                        color: activePalette.text
+                        text: i18n("Feature settings")
+                    }
+                }
             }
             ToolButton {
                 visible: false
-                iconName: 'tools-wizard'
                 id: effectButton
                 focusPolicy: Qt.NoFocus
                 contentItem: Item {
