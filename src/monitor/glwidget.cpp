@@ -1675,14 +1675,14 @@ bool GLWidget::playZone(int in, int out, bool loop)
     m_consumer->purge();
     m_producer->set("out", out);
     m_producer->set_speed(1.0);
-    if (m_consumer->is_stopped()) {
-        m_consumer->start();
-    }
     m_consumer->set("scrub_audio", 0);
     m_consumer->set("refresh", 1);
     m_isZoneMode = true;
     m_isLoopMode = loop;
     m_isFeatureMode = false;
+    if (m_consumer->is_stopped()) {
+        m_consumer->start();
+    }
     return true;
 }
 

@@ -1365,6 +1365,8 @@ void Monitor::slotPlayZone()
 void Monitor::slotPlayZone(int in, int out, bool loop)
 {
     slotActivateMonitor();
+    m_glMonitor->getControllerProxy()->setZoneIn(in);
+    m_glMonitor->getControllerProxy()->setZoneOut(out);
     bool ok = m_glMonitor->playZone(in, out, loop);
     if (ok) {
         m_playAction->setActive(true);
